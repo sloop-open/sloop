@@ -1,358 +1,361 @@
-ÕâÊÇÒ»¸öÇ¶ÈëÊ½Âã»ú¿ò¼Ü,Ìá¹©Ò»Ì×API,·½±ã¹ÜÀí¶àÖÖÈÎÎñ,±ÈÈç³¬Ê±ÈÎÎñ/ÖÜÆÚÈÎÎñ/²¢ÐÐÈÎÎñ/»¥³âÈÎÎñµÈ¡£
-ÓÐ sys_wait ºÍ sys_wait_bare ÕâÁ½¸ö·Ç×èÈûµÈ´ý API £¬Ö§³Ö¹ÒÆðµ±Ç°»¥³âÈÎÎñ£¬µ«²»×èÈû²¢ÐÐÈÎÎñ¡£
+åµŒå…¥å¼å¾®å¤„ç†å™¨ å…¬ä¼—å·ä¸º sloop æŽ¨å¹¿
+https://mp.weixin.qq.com/s/SuwIDmhoJ94_5aH0qMlEzA
 
-ÈÎÎñ²ÉÓÃ¶¯Ì¬×¢²á»úÖÆ£¬ÓÐÒÔÏÂÓÅÊÆ
-1.¿ÉÒÔÔÚÔËÐÐÊ±·½±ãµØÆôÓÃºÍÍ£Ö¹ÈÎÎñ£¬Í£Ö¹ºóÃ»ÓÐ¸±×÷ÓÃ¡£
-2.¿ÉÒÔÌæ´ú²¿·Ö¾²Ì¬µ÷ÓÃ£¬¼ò»¯ÎÄ¼þÖ®¼äµÄµ÷ÓÃñîºÏ¡£
-3.¿ÉÒÔÌæ´ú²¿·ÖÒÀÀµ±êÖ¾Á¿½øÐÐÍ¬²½µÄ²Ù×÷£¬ÓÐÐ§½µµÍ±êÖ¾µÄÊ¹ÓÃÊýÁ¿£¬Ôö¼Ó´úÂëµÄ¿É¶ÁÐÔ¡£
+è¿™æ˜¯ä¸€ä¸ªåµŒå…¥å¼è£¸æœºæ¡†æž¶,æä¾›ä¸€å¥—API,æ–¹ä¾¿ç®¡ç†å¤šç§ä»»åŠ¡,æ¯”å¦‚è¶…æ—¶ä»»åŠ¡/å‘¨æœŸä»»åŠ¡/å¹¶è¡Œä»»åŠ¡/äº’æ–¥ä»»åŠ¡ç­‰ã€‚
+æœ‰ sys_wait å’Œ sys_wait_bare è¿™ä¸¤ä¸ªéžé˜»å¡žç­‰å¾… API ï¼Œæ”¯æŒæŒ‚èµ·å½“å‰äº’æ–¥ä»»åŠ¡ï¼Œä½†ä¸é˜»å¡žå¹¶è¡Œä»»åŠ¡ã€‚
+
+ä»»åŠ¡é‡‡ç”¨åŠ¨æ€æ³¨å†Œæœºåˆ¶ï¼Œæœ‰ä»¥ä¸‹ä¼˜åŠ¿
+1.å¯ä»¥åœ¨è¿è¡Œæ—¶æ–¹ä¾¿åœ°å¯ç”¨å’Œåœæ­¢ä»»åŠ¡ï¼Œåœæ­¢åŽæ²¡æœ‰å‰¯ä½œç”¨ã€‚
+2.å¯ä»¥æ›¿ä»£éƒ¨åˆ†é™æ€è°ƒç”¨ï¼Œç®€åŒ–æ–‡ä»¶ä¹‹é—´çš„è°ƒç”¨è€¦åˆã€‚
+3.å¯ä»¥æ›¿ä»£éƒ¨åˆ†ä¾èµ–æ ‡å¿—é‡è¿›è¡ŒåŒæ­¥çš„æ“ä½œï¼Œæœ‰æ•ˆé™ä½Žæ ‡å¿—çš„ä½¿ç”¨æ•°é‡ï¼Œå¢žåŠ ä»£ç çš„å¯è¯»æ€§ã€‚
 
 =====================================================================================
 
-Ä¿Â¼½á¹¹ËµÃ÷
+ç›®å½•ç»“æž„è¯´æ˜Ž
 
 /project
-©À©¤©¤ Bin/                                # ¿ÉÖ´ÐÐÎÄ¼þÄ¿Â¼
-©À©¤©¤ Libraries/                          # MCU ¿âÎÄ¼þ
-©¦   ©À©¤©¤ CMSIS                               # CMSIS
-©¦   ©¸©¤©¤ STM32F2xx_StdPeriph_Driver          # ST±ê×¼ÍâÉè¿â
-©À©¤©¤ MDK-ARM/                            # MDK ¹¤³ÌÎÄ¼þ
-©À©¤©¤ user/                               # ÓÃ»§ÎÄ¼þ
-©¦   ©À©¤©¤ app                               === Ó¦ÓÃ²ãÎÄ¼þ ===
-©¦   ©¦   ©À©¤©¤ config                              # ÓÃ»§ÅäÖÃ
-©¦   ©¦   ©¦   ©À©¤©¤ bl_config.h                         # sloop ÅäÖÃÎÄ¼þ
-©¦   ©¦   ©¦   ©À©¤©¤ com_config.h                        # ´®¿ÚºÍcan ÅäÖÃÎÄ¼þ
-©¦   ©¦   ©¦   ©À©¤©¤ gpio_config.c                       # GPIO ÅäÖÃÎÄ¼þ
-©¦   ©¦   ©¦   ©À©¤©¤ gpio_config.h                       # GPIO ¶ÔÍâAPIºÍ±ðÃû
-©¦   ©¦   ©¦   ©¸©¤©¤ stm32f2xx_conf.h                    # ST ÍâÉè¿âÅäÖÃ£¨²»Òª±ä¸ü£©
-©¦   ©¦   ©À©¤©¤ module                              # Õû»ú¹¦ÄÜÄ£¿é£¬±ÈÈçËÅ·þµç»ú¡¢±àÂëÆ÷
-©¦   ©¦   ©À©¤©¤ tasks                               # ÈÎÎñ´æ·ÅÎÄ¼þ¼Ð
-©¦   ©¦   ©¦   ©À©¤©¤ task_baseInit.c                     # Ô­Ê¼ÈÎÎñ
-©¦   ©¦   ©¦   ©À©¤©¤ task_demo.c                         # ÑÝÊ¾ÈÎÎñ
-©¦   ©¦   ©¦   ©¸©¤©¤ task_idle.c                         # ¿ÕÏÐÈÎÎñ
-©¦   ©¦   ©À©¤©¤ common.h                            # Ó¦ÓÃ²ã¹«¹²°üº¬
-©¦   ©¦   ©À©¤©¤ main.c                              # ³ÌÐòÈë¿Ú main£¬ÔÚ´ËÈõ¶¨ÒåÈÎÎñ
-©¦   ©¦   ©¸©¤©¤ main.h                              # ÔÚ´ËÉùÃ÷ÈÎÎñ
-©¦   ©À©¤©¤ sloop                          === sloop Ô´Âë£¨²»Òª±ä¸ü£©===
-©¦   ©¦   ©À©¤©¤ kernel                              # ÄÚºË
-©¦   ©¦   ©¦   ©À©¤©¤ sloop.c                          # sloop ÄÚºËÔ´´úÂë
-©¦   ©¦   ©¦   ©À©¤©¤ behavior_log.h                      # ÐÐÎªÈÕÖ¾ºê
-©¦   ©¦   ©¦   ©¸©¤©¤ console.c                           # ¿ØÖÆÌ¨Ô´´úÂë
-©¦   ©¦   ©À©¤©¤ mcu_interface                   # BLÒÆÖ²Ê±£¬MCU ½Ó¿Ú´úÂë
-©¦   ©¦   ©¦   ©À©¤©¤ stm32f2xx_it.c                      # mcu ÖÐ¶ÏÍ·ÎÄ¼þ£¨²»Òª±ä¸ü£©
-©¦   ©¦   ©¦   ©¸©¤©¤ stm32f2xx_it.h                      # mcu ÖÐ¶ÏÔ´ÎÄ¼þ£¨²»Òª±ä¸ü£©½¨ÒéÔÚÇý¶¯ÖÐÊµÏÖ RQHandler£¬²»ÐèÒª»ã×Üµ½ÕâÀï
-©¦   ©¦   ©À©¤©¤ RTT                             # ÈÕÖ¾Ö§³ÖÄ£¿é£¬SEGGER RTT
-©¦   ©¦   ©À©¤©¤ sloop.h                      # sloop ÓÃ»§ API
-©¦   ©¦   ©¸©¤©¤ bl_common.h                     # sloop ÓÃ»§ ºê API£¬Ö÷ÒªÊÇÈÕÖ¾
-©¦   ©À©¤©¤ service                           === ÎªÓ¦ÓÃ²ãÌá¹©·þÎñ£¨²»Òª±ä¸ü£©===
-©¦   ©¦   ©À©¤©¤ app_service_pack                    # ÃæÏòÓ¦ÓÃ²ãµÄ·þÎñ°ü£¬Óë MCU ÎÞ¹Ø£¬ÍêÈ«¿ÉÒÆÖ²
-©¦   ©¦   ©À©¤©¤ mcu_service_pack                    # »ùÓÚMCUµÄ·þÎñ°ü£¬ÍêÈ«ÒÀÀµ MCU£¬¶ÔÆäËûMCUÆ½Ì¨²»¿ÉÒÆÖ²
-©¦   ©¦   ©¸©¤©¤ service_api.h                       # ·þÎñ°üÃæÏòÓ¦ÓÃ²ã£¬Ìá¹©¸øÓÃ»§µÄAPI
-©¸©¤©¤ readme.md                           # ÏîÄ¿ËµÃ÷ÎÄµµ ºÍ ¸üÐÂÈÕÖ¾
+â”œâ”€â”€ Bin/                                # å¯æ‰§è¡Œæ–‡ä»¶ç›®å½•
+â”œâ”€â”€ Libraries/                          # MCU åº“æ–‡ä»¶
+â”‚   â”œâ”€â”€ CMSIS                               # CMSIS
+â”‚   â””â”€â”€ STM32F2xx_StdPeriph_Driver          # STæ ‡å‡†å¤–è®¾åº“
+â”œâ”€â”€ MDK-ARM/                            # MDK å·¥ç¨‹æ–‡ä»¶
+â”œâ”€â”€ user/                               # ç”¨æˆ·æ–‡ä»¶
+â”‚   â”œâ”€â”€ app                               === åº”ç”¨å±‚æ–‡ä»¶ ===
+â”‚   â”‚   â”œâ”€â”€ config                              # ç”¨æˆ·é…ç½®
+â”‚   â”‚   â”‚   â”œâ”€â”€ bl_config.h                         # sloop é…ç½®æ–‡ä»¶
+â”‚   â”‚   â”‚   â”œâ”€â”€ com_config.h                        # ä¸²å£å’Œcan é…ç½®æ–‡ä»¶
+â”‚   â”‚   â”‚   â”œâ”€â”€ gpio_config.c                       # GPIO é…ç½®æ–‡ä»¶
+â”‚   â”‚   â”‚   â”œâ”€â”€ gpio_config.h                       # GPIO å¯¹å¤–APIå’Œåˆ«å
+â”‚   â”‚   â”‚   â””â”€â”€ stm32f2xx_conf.h                    # ST å¤–è®¾åº“é…ç½®ï¼ˆä¸è¦å˜æ›´ï¼‰
+â”‚   â”‚   â”œâ”€â”€ module                              # æ•´æœºåŠŸèƒ½æ¨¡å—ï¼Œæ¯”å¦‚ä¼ºæœç”µæœºã€ç¼–ç å™¨
+â”‚   â”‚   â”œâ”€â”€ tasks                               # ä»»åŠ¡å­˜æ”¾æ–‡ä»¶å¤¹
+â”‚   â”‚   â”‚   â”œâ”€â”€ task_baseInit.c                     # åŽŸå§‹ä»»åŠ¡
+â”‚   â”‚   â”‚   â”œâ”€â”€ task_demo.c                         # æ¼”ç¤ºä»»åŠ¡
+â”‚   â”‚   â”‚   â””â”€â”€ task_idle.c                         # ç©ºé—²ä»»åŠ¡
+â”‚   â”‚   â”œâ”€â”€ common.h                            # åº”ç”¨å±‚å…¬å…±åŒ…å«
+â”‚   â”‚   â”œâ”€â”€ main.c                              # ç¨‹åºå…¥å£ mainï¼Œåœ¨æ­¤å¼±å®šä¹‰ä»»åŠ¡
+â”‚   â”‚   â””â”€â”€ main.h                              # åœ¨æ­¤å£°æ˜Žä»»åŠ¡
+â”‚   â”œâ”€â”€ sloop                          === sloop æºç ï¼ˆä¸è¦å˜æ›´ï¼‰===
+â”‚   â”‚   â”œâ”€â”€ kernel                              # å†…æ ¸
+â”‚   â”‚   â”‚   â”œâ”€â”€ sloop.c                          # sloop å†…æ ¸æºä»£ç 
+â”‚   â”‚   â”‚   â”œâ”€â”€ behavior_log.h                      # è¡Œä¸ºæ—¥å¿—å®
+â”‚   â”‚   â”‚   â””â”€â”€ console.c                           # æŽ§åˆ¶å°æºä»£ç 
+â”‚   â”‚   â”œâ”€â”€ mcu_interface                   # BLç§»æ¤æ—¶ï¼ŒMCU æŽ¥å£ä»£ç 
+â”‚   â”‚   â”‚   â”œâ”€â”€ stm32f2xx_it.c                      # mcu ä¸­æ–­å¤´æ–‡ä»¶ï¼ˆä¸è¦å˜æ›´ï¼‰
+â”‚   â”‚   â”‚   â””â”€â”€ stm32f2xx_it.h                      # mcu ä¸­æ–­æºæ–‡ä»¶ï¼ˆä¸è¦å˜æ›´ï¼‰å»ºè®®åœ¨é©±åŠ¨ä¸­å®žçŽ° RQHandlerï¼Œä¸éœ€è¦æ±‡æ€»åˆ°è¿™é‡Œ
+â”‚   â”‚   â”œâ”€â”€ RTT                             # æ—¥å¿—æ”¯æŒæ¨¡å—ï¼ŒSEGGER RTT
+â”‚   â”‚   â”œâ”€â”€ sloop.h                      # sloop ç”¨æˆ· API
+â”‚   â”‚   â””â”€â”€ bl_common.h                     # sloop ç”¨æˆ· å® APIï¼Œä¸»è¦æ˜¯æ—¥å¿—
+â”‚   â”œâ”€â”€ service                           === ä¸ºåº”ç”¨å±‚æä¾›æœåŠ¡ï¼ˆä¸è¦å˜æ›´ï¼‰===
+â”‚   â”‚   â”œâ”€â”€ app_service_pack                    # é¢å‘åº”ç”¨å±‚çš„æœåŠ¡åŒ…ï¼Œä¸Ž MCU æ— å…³ï¼Œå®Œå…¨å¯ç§»æ¤
+â”‚   â”‚   â”œâ”€â”€ mcu_service_pack                    # åŸºäºŽMCUçš„æœåŠ¡åŒ…ï¼Œå®Œå…¨ä¾èµ– MCUï¼Œå¯¹å…¶ä»–MCUå¹³å°ä¸å¯ç§»æ¤
+â”‚   â”‚   â””â”€â”€ service_api.h                       # æœåŠ¡åŒ…é¢å‘åº”ç”¨å±‚ï¼Œæä¾›ç»™ç”¨æˆ·çš„API
+â””â”€â”€ readme.md                           # é¡¹ç›®è¯´æ˜Žæ–‡æ¡£ å’Œ æ›´æ–°æ—¥å¿—
 
 =====================================================================================
 
-#Ò»Ð©Éè¼Æ½¨Òé£º
+#ä¸€äº›è®¾è®¡å»ºè®®ï¼š
 
-1.¿ª·¢ÖÐÒª²»¶ÏË¼¿¼¸ÃÒµÎñÊÇ²»ÊÇÖ÷ÒªÒµÎñ£¬Èç¹ûÊÇÖ÷ÒªÒµÎñÐèÒª±©Â¶ÔÚ¿ÉÒÔ¿ìËÙÖ±¹Û¿´µ½µÄµØ·½¡£
-2.ÒµÎñ²»Ó¦¸ÃÊÇ»ìÂÒ·ÖÉ¢µÄ£¬¶øÊÇÓÐ½á¹¹µÄ£¬Ö÷´Î·ÖÃ÷µÄ¡£
-3.¾¡Á¿²»ÒªÊ¹ÓÃÔËÐÐÊ±¶¯Ì¬Á¬½Ó£¨º¯ÊýÖ¸Õë£©£¬ÒòÎªÕâÖÖ·½Ê½»áÆÆ»µ¾²Ì¬·ÖÎöÌØÐÔ¡£Ö»ÓÐÔÚ±ØÒªµÄÊ±ºò²Å²ÉÓÃ£¬±ÈÈç³éÏóÒµÎñµ÷ÓÃ£¨ÈÎÎñµ÷ÓÃ£©¡£
-4.ÓÃ¾²Ì¬µ÷ÓÃµÄ·½Ê½£¬²»½ö¾ßÓÐÁ¼ºÃµÄ¾²Ì¬·ÖÎöÐÔ£¨¿ÉÒÔÖ±½ÓÌø×ª£©£¬¶øÇÒÔËÐÐÊ±µÄÐ§ÂÊÒ²Òª¸ß£¬»¹±ÜÃâÁËNULLÖ¸ÕëÎÊÌâ¡£
-5.Òª¿ØÖÆº¯Êýµ÷ÓÃÉî¶È£¬ÔÚÂú×ãÉè¼ÆÐèÇóÇé¿öÏÂÔ½Ç³Ô½ºÃ£¬Ò»°ã²»Òª³¬¹ý6²ã¡£
-6.Ã¿Ò»²ãµ÷ÓÃ¶¼»áÏûºÄÕ»¿Õ¼ä£¬¿ØÖÆÕ»Éî¶È¶ÔÓÚÕ»Òç³ö·çÏÕ¿ØÖÆºÍÔËÐÐÊ±¼õÉÙÕ»ÈëÕ»³öÌá¸ßÔËÐÐÐ§ÂÊÊ®·ÖÓÐÒæ¡£
-7.º¯ÊýÃûÓ¦¾ßÓÐ¾Ö²¿±æÊ¶¶È£¬¶øÇÒ²»Ó¦Ì«³¤£¬²»Òª³¬¹ý32¸ö×Ö·û¡£ÄÜ±í´ïºËÐÄ¹¦ÄÜ¼´¿É£¬²»ÒªÌ«¹ý×·ÇóÃû³ÆµÄÍ³Ò»£¨Õâ·´¶ø»áÆÆ»µº¯ÊýÃû³ÆµÄ±æÊ¶¶È£©¡£
-8.ÒµÎñÅäÖÃºÍÒµÎñµÄÖ´ÐÐloop£¬Ó¦¸Ã·ÅÔÚÒ»¸öÈÎÎñÎÄ¼þ»òÄ£¿éÎÄ¼þÏÂ¡£
-9.°´¼üÏìÓ¦ÕâÐ©»áÖ±½Óµ¼ÖÂÒµÎñÌø×ªµÄµØ·½£¨¿ÉÒÔ½Ð×öÒµÎñÂ·ÓÉ£©£¬ÒµÎñÂ·ÓÉÐèÒª¼¯ÖÐ¹ÜÀíºÍ±©Â¶£¬²»ÄÜ·ÖÉ¢£¬·ñÔò½«¼«²»ÀûÓÚÒµÎñÁ÷µÄ·ÖÎö¡£
-10.¾¡Á¿²»ÒªÊ¹ÓÃ±êÖ¾Á¿À´½øÐÐÄ£¿é¼äµÄ½»»¥£¬½¨Òé²ÉÓÃº¯Êý·â×°²Ù×÷½Ó¿ÚÌæ´ú±êÖ¾Á¿¡£ÒòÎªÍùÍùº¯ÊýµÄÒâÍ¼±È±êÖ¾Á¿ÇåÎú¡£
-11.Èç¹û³éÏó²ã´Î¹ý¸ß£¬¿ª·¢Õß¿ÉÄÜÐèÒª»¨·Ñ½Ï¶àÊ±¼äÈ¥Àí½âÃ¿Ò»²ãµÄ¾ßÌåÊµÏÖ£¬ÓÈÆäÊÇµ±¹¦ÄÜ½Ï¼òµ¥Ê±£¬¹ý¶ÈµÄ³éÏó¿ÉÄÜÊÊµÃÆä·´¡£
-12.¾¡Á¿±ÜÃâÊ¹ÓÃ extern ¹Ø¼ü×Ö£¬Èç¹û¿ÉÄÜÓ¦µ±ÍêÈ«½ûÖ¹Ê¹ÓÃ extern¡£ÓÃº¯ÊýÀ´×÷ÎªÄ£¿éÖ®¼äµÄ½»»¥½Ó¿Ú£¬¶ø²»ÊÇÈ«¾Ö±äÁ¿¡£ 
-13.Èç¹ûÊÇÍ¬Ò»ÎÄ¼þÖÐº¯ÊýÖ®¼äµÄ½»»¥£¬¿ÉÒÔÊ¹ÓÃ±êÖ¾Á¿£¬¸üÇáÁ¿¡£ÒòÎªÔÚÍ¬Ò»ÎÄ¼þ£¬ÈÝÒ×¶¨Î»£¬²»Ì«»áÒýÆð»ìÂÒ¡£
+1.å¼€å‘ä¸­è¦ä¸æ–­æ€è€ƒè¯¥ä¸šåŠ¡æ˜¯ä¸æ˜¯ä¸»è¦ä¸šåŠ¡ï¼Œå¦‚æžœæ˜¯ä¸»è¦ä¸šåŠ¡éœ€è¦æš´éœ²åœ¨å¯ä»¥å¿«é€Ÿç›´è§‚çœ‹åˆ°çš„åœ°æ–¹ã€‚
+2.ä¸šåŠ¡ä¸åº”è¯¥æ˜¯æ··ä¹±åˆ†æ•£çš„ï¼Œè€Œæ˜¯æœ‰ç»“æž„çš„ï¼Œä¸»æ¬¡åˆ†æ˜Žçš„ã€‚
+3.å°½é‡ä¸è¦ä½¿ç”¨è¿è¡Œæ—¶åŠ¨æ€è¿žæŽ¥ï¼ˆå‡½æ•°æŒ‡é’ˆï¼‰ï¼Œå› ä¸ºè¿™ç§æ–¹å¼ä¼šç ´åé™æ€åˆ†æžç‰¹æ€§ã€‚åªæœ‰åœ¨å¿…è¦çš„æ—¶å€™æ‰é‡‡ç”¨ï¼Œæ¯”å¦‚æŠ½è±¡ä¸šåŠ¡è°ƒç”¨ï¼ˆä»»åŠ¡è°ƒç”¨ï¼‰ã€‚
+4.ç”¨é™æ€è°ƒç”¨çš„æ–¹å¼ï¼Œä¸ä»…å…·æœ‰è‰¯å¥½çš„é™æ€åˆ†æžæ€§ï¼ˆå¯ä»¥ç›´æŽ¥è·³è½¬ï¼‰ï¼Œè€Œä¸”è¿è¡Œæ—¶çš„æ•ˆçŽ‡ä¹Ÿè¦é«˜ï¼Œè¿˜é¿å…äº†NULLæŒ‡é’ˆé—®é¢˜ã€‚
+5.è¦æŽ§åˆ¶å‡½æ•°è°ƒç”¨æ·±åº¦ï¼Œåœ¨æ»¡è¶³è®¾è®¡éœ€æ±‚æƒ…å†µä¸‹è¶Šæµ…è¶Šå¥½ï¼Œä¸€èˆ¬ä¸è¦è¶…è¿‡6å±‚ã€‚
+6.æ¯ä¸€å±‚è°ƒç”¨éƒ½ä¼šæ¶ˆè€—æ ˆç©ºé—´ï¼ŒæŽ§åˆ¶æ ˆæ·±åº¦å¯¹äºŽæ ˆæº¢å‡ºé£Žé™©æŽ§åˆ¶å’Œè¿è¡Œæ—¶å‡å°‘æ ˆå…¥æ ˆå‡ºæé«˜è¿è¡Œæ•ˆçŽ‡ååˆ†æœ‰ç›Šã€‚
+7.å‡½æ•°ååº”å…·æœ‰å±€éƒ¨è¾¨è¯†åº¦ï¼Œè€Œä¸”ä¸åº”å¤ªé•¿ï¼Œä¸è¦è¶…è¿‡32ä¸ªå­—ç¬¦ã€‚èƒ½è¡¨è¾¾æ ¸å¿ƒåŠŸèƒ½å³å¯ï¼Œä¸è¦å¤ªè¿‡è¿½æ±‚åç§°çš„ç»Ÿä¸€ï¼ˆè¿™åè€Œä¼šç ´åå‡½æ•°åç§°çš„è¾¨è¯†åº¦ï¼‰ã€‚
+8.ä¸šåŠ¡é…ç½®å’Œä¸šåŠ¡çš„æ‰§è¡Œloopï¼Œåº”è¯¥æ”¾åœ¨ä¸€ä¸ªä»»åŠ¡æ–‡ä»¶æˆ–æ¨¡å—æ–‡ä»¶ä¸‹ã€‚
+9.æŒ‰é”®å“åº”è¿™äº›ä¼šç›´æŽ¥å¯¼è‡´ä¸šåŠ¡è·³è½¬çš„åœ°æ–¹ï¼ˆå¯ä»¥å«åšä¸šåŠ¡è·¯ç”±ï¼‰ï¼Œä¸šåŠ¡è·¯ç”±éœ€è¦é›†ä¸­ç®¡ç†å’Œæš´éœ²ï¼Œä¸èƒ½åˆ†æ•£ï¼Œå¦åˆ™å°†æžä¸åˆ©äºŽä¸šåŠ¡æµçš„åˆ†æžã€‚
+10.å°½é‡ä¸è¦ä½¿ç”¨æ ‡å¿—é‡æ¥è¿›è¡Œæ¨¡å—é—´çš„äº¤äº’ï¼Œå»ºè®®é‡‡ç”¨å‡½æ•°å°è£…æ“ä½œæŽ¥å£æ›¿ä»£æ ‡å¿—é‡ã€‚å› ä¸ºå¾€å¾€å‡½æ•°çš„æ„å›¾æ¯”æ ‡å¿—é‡æ¸…æ™°ã€‚
+11.å¦‚æžœæŠ½è±¡å±‚æ¬¡è¿‡é«˜ï¼Œå¼€å‘è€…å¯èƒ½éœ€è¦èŠ±è´¹è¾ƒå¤šæ—¶é—´åŽ»ç†è§£æ¯ä¸€å±‚çš„å…·ä½“å®žçŽ°ï¼Œå°¤å…¶æ˜¯å½“åŠŸèƒ½è¾ƒç®€å•æ—¶ï¼Œè¿‡åº¦çš„æŠ½è±¡å¯èƒ½é€‚å¾—å…¶åã€‚
+12.å°½é‡é¿å…ä½¿ç”¨ extern å…³é”®å­—ï¼Œå¦‚æžœå¯èƒ½åº”å½“å®Œå…¨ç¦æ­¢ä½¿ç”¨ externã€‚ç”¨å‡½æ•°æ¥ä½œä¸ºæ¨¡å—ä¹‹é—´çš„äº¤äº’æŽ¥å£ï¼Œè€Œä¸æ˜¯å…¨å±€å˜é‡ã€‚ 
+13.å¦‚æžœæ˜¯åŒä¸€æ–‡ä»¶ä¸­å‡½æ•°ä¹‹é—´çš„äº¤äº’ï¼Œå¯ä»¥ä½¿ç”¨æ ‡å¿—é‡ï¼Œæ›´è½»é‡ã€‚å› ä¸ºåœ¨åŒä¸€æ–‡ä»¶ï¼Œå®¹æ˜“å®šä½ï¼Œä¸å¤ªä¼šå¼•èµ·æ··ä¹±ã€‚
 
-#¹ØÓÚÖÐ¶Ï´¦ÀíµÄ×î¼ÑÊµ¼ù£º
+#å…³äºŽä¸­æ–­å¤„ç†çš„æœ€ä½³å®žè·µï¼š
 
-1.sloop Ö÷Ñ­»·¿ÉÒÔ¿´³ÉÒ»¸öµ¥Ïß³Ì£¬³ÆÎªÖ÷Ïß³Ì¡£
-2.ÖÐ¶Ï¿ÉÒÔÀí½âÎª¡°Ó²¼þ´¥·¢µÄ³¬¸ßÓÅÏÈ¼¶µÄ¶ÌÔÝÏß³Ì¡±¡£
-3.ÖÐ¶ÏÊÊºÏ¿ìËÙ´¦ÀíÊÂ¼þ£¬¶øÖ÷Ïß³ÌÊÊºÏ³ÖÐøÖ´ÐÐÈÎÎñ¡£
-4.ÖÐ¶ÏÀïÖ»×ö¡°×îÐ¡¡¢×î¹Ø¼ü¡±µÄÊÂÇé£¬±ÈÈç¶ÁÈ¡´«¸ÐÆ÷¡¢Çå³ýÖÐ¶Ï±êÖ¾Î»¡£
-5.ÖÐ¶Ï±ØÐë¿ìËÙÖ´ÐÐÍê³É¡£
-6.¸´ÔÓÂß¼­½»¸øÖ÷Ïß³Ì´¦Àí£¬ÍÆ¼öÊ¹ÓÃ sys_task_once() °ÑÖÐ¶Ï´¥·¢µÄÒµÎñÂß¼­ÏÂ·Åµ½Ö÷Ïß³Ì´¦Àí¡£
-7.±ÜÃâÖÐ¶ÏÇ¶Ì×£¬·ñÔò¿ÉÄÜµ¼ÖÂÏµÍ³±ÀÀ£»ò²»¿ÉÔ¤²âµÄÑÓ³Ù£¬ËùÒÔNVIC ÅäÖÃ³ÉÁË²»¿ÉÇÀÕ¼¡£
-8.ÖÐ¶ÏÊÇÒì²½´¦Àí£¬Ó¦¸Ã¾¡¿ì´¦ÀíÍê³É£¬ÇÐ»ØÖ÷Ïß³Ì¼ÌÐøÍ¬²½´¦Àí¸÷ÏîÊÂÎñ¡£
+1.sloop ä¸»å¾ªçŽ¯å¯ä»¥çœ‹æˆä¸€ä¸ªå•çº¿ç¨‹ï¼Œç§°ä¸ºä¸»çº¿ç¨‹ã€‚
+2.ä¸­æ–­å¯ä»¥ç†è§£ä¸ºâ€œç¡¬ä»¶è§¦å‘çš„è¶…é«˜ä¼˜å…ˆçº§çš„çŸ­æš‚çº¿ç¨‹â€ã€‚
+3.ä¸­æ–­é€‚åˆå¿«é€Ÿå¤„ç†äº‹ä»¶ï¼Œè€Œä¸»çº¿ç¨‹é€‚åˆæŒç»­æ‰§è¡Œä»»åŠ¡ã€‚
+4.ä¸­æ–­é‡Œåªåšâ€œæœ€å°ã€æœ€å…³é”®â€çš„äº‹æƒ…ï¼Œæ¯”å¦‚è¯»å–ä¼ æ„Ÿå™¨ã€æ¸…é™¤ä¸­æ–­æ ‡å¿—ä½ã€‚
+5.ä¸­æ–­å¿…é¡»å¿«é€Ÿæ‰§è¡Œå®Œæˆã€‚
+6.å¤æ‚é€»è¾‘äº¤ç»™ä¸»çº¿ç¨‹å¤„ç†ï¼ŒæŽ¨èä½¿ç”¨ sys_task_once() æŠŠä¸­æ–­è§¦å‘çš„ä¸šåŠ¡é€»è¾‘ä¸‹æ”¾åˆ°ä¸»çº¿ç¨‹å¤„ç†ã€‚
+7.é¿å…ä¸­æ–­åµŒå¥—ï¼Œå¦åˆ™å¯èƒ½å¯¼è‡´ç³»ç»Ÿå´©æºƒæˆ–ä¸å¯é¢„æµ‹çš„å»¶è¿Ÿï¼Œæ‰€ä»¥NVIC é…ç½®æˆäº†ä¸å¯æŠ¢å ã€‚
+8.ä¸­æ–­æ˜¯å¼‚æ­¥å¤„ç†ï¼Œåº”è¯¥å°½å¿«å¤„ç†å®Œæˆï¼Œåˆ‡å›žä¸»çº¿ç¨‹ç»§ç»­åŒæ­¥å¤„ç†å„é¡¹äº‹åŠ¡ã€‚
 
-#ÒÔÏÂÊÇ³£¼ûµÄ·Ç·¨ÄÚ´æ²Ù×÷£¬¿Éµ¼ÖÂ²»¿ÉÔ¤²âµÄÐÐÎª
+#ä»¥ä¸‹æ˜¯å¸¸è§çš„éžæ³•å†…å­˜æ“ä½œï¼Œå¯å¯¼è‡´ä¸å¯é¢„æµ‹çš„è¡Œä¸º
 
-1.Î´³õÊ¼»¯µÄ±äÁ¿
+1.æœªåˆå§‹åŒ–çš„å˜é‡
 {
     int x;
 
-    /* x Î´³õÊ¼»¯£¬Êä³ö²»¿ÉÔ¤²âµÄÖµ */
+    /* x æœªåˆå§‹åŒ–ï¼Œè¾“å‡ºä¸å¯é¢„æµ‹çš„å€¼ */
     printf("%d", x);
 }
 
-2.¶Ô³£Á¿½øÐÐÐÞ¸Ä
+2.å¯¹å¸¸é‡è¿›è¡Œä¿®æ”¹
 char* str = "Hello";
 
-/* ´íÎó£¬×Ö·û´®³£Á¿²»¿ÉÐÞ¸Ä */
+/* é”™è¯¯ï¼Œå­—ç¬¦ä¸²å¸¸é‡ä¸å¯ä¿®æ”¹ */
 str[0] = 'h';
 
-3.Êý×éÔ½½çÐ´Èë
+3.æ•°ç»„è¶Šç•Œå†™å…¥
 int arr[5] = {1, 2, 3, 4, 5};
 
-/* ³¬³öÊý×é·¶Î§£¬Ô½½çÐ´Èë */
+/* è¶…å‡ºæ•°ç»„èŒƒå›´ï¼Œè¶Šç•Œå†™å…¥ */
 arr[10] = 100;
 
-/* ¿ÉÄÜµ¼ÖÂÆäËûÄ£¿é»òº¯Êý¹¤×÷Òì³£ */
+/* å¯èƒ½å¯¼è‡´å…¶ä»–æ¨¡å—æˆ–å‡½æ•°å·¥ä½œå¼‚å¸¸ */
 
-4.¿Õº¯ÊýÖ¸Õëµ÷ÓÃ
+4.ç©ºå‡½æ•°æŒ‡é’ˆè°ƒç”¨
 pfunc func = NULL;
 
-/* Î´¶¨ÒåÐÐÎª£¬Í¨³£»áµ¼ÖÂ±ÀÀ£ */
+/* æœªå®šä¹‰è¡Œä¸ºï¼Œé€šå¸¸ä¼šå¯¼è‡´å´©æºƒ */
 func();
 
-5.Î´´¦ÀíµÄ¿ÕÖ¸Õë½âÒýÓÃ
+5.æœªå¤„ç†çš„ç©ºæŒ‡é’ˆè§£å¼•ç”¨
 int* ptr = NULL;
 
-/* ¿ÕÖ¸Õë½âÒýÓÃ£¬³ÌÐò±ÀÀ£»òÐÐÎª²»È·¶¨ */
+/* ç©ºæŒ‡é’ˆè§£å¼•ç”¨ï¼Œç¨‹åºå´©æºƒæˆ–è¡Œä¸ºä¸ç¡®å®š */
 *ptr = 10;
 
-6.»º³åÇøÒç³ö (Buffer Overflow)
+6.ç¼“å†²åŒºæº¢å‡º (Buffer Overflow)
 char buffer[10];
 
-/* ³¬³ö»º³åÇøµÄ´óÐ¡ */
+/* è¶…å‡ºç¼“å†²åŒºçš„å¤§å° */
 strcpy(buffer, "This is a very long string");
 
-/* ¿ÉÄÜµ¼ÖÂÆäËûÄ£¿é»òº¯Êý¹¤×÷Òì³£ */
+/* å¯èƒ½å¯¼è‡´å…¶ä»–æ¨¡å—æˆ–å‡½æ•°å·¥ä½œå¼‚å¸¸ */
 
 char buffer[10];
 
-/* ²»°²È«£¬¿ÉÄÜÒç³ö */
+/* ä¸å®‰å…¨ï¼Œå¯èƒ½æº¢å‡º */
 sprintf(buffer, "This is a string");
 
-7.ÄÚ´æÐ¹Â©£¨Memory Leak£©
+7.å†…å­˜æ³„æ¼ï¼ˆMemory Leakï¼‰
 
 int* ptr = malloc(sizeof(int));
 
-/* Ã»ÓÐµ÷ÓÃ free(ptr)£¬µ¼ÖÂÄÚ´æÐ¹Â© */
+/* æ²¡æœ‰è°ƒç”¨ free(ptr)ï¼Œå¯¼è‡´å†…å­˜æ³„æ¼ */
 
-8.µÝ¹éÉî¶È¹ýÉîµ¼ÖÂÕ»Òç³ö
+8.é€’å½’æ·±åº¦è¿‡æ·±å¯¼è‡´æ ˆæº¢å‡º
 void recursive_function() {
 
-    /* Ã»ÓÐÖÕÖ¹Ìõ¼þ£¬µ¼ÖÂÕ»Òç³ö */
+    /* æ²¡æœ‰ç»ˆæ­¢æ¡ä»¶ï¼Œå¯¼è‡´æ ˆæº¢å‡º */
     recursive_function();
 }
 
-#°²È«ÐÔÓëÄÚ´æ¹ÜÀíµÄ¹ØÏµ£º
-CÓïÑÔÖÐµÄÄÚ´æ¹ÜÀíÔðÈÎÂäÔÚ¿ª·¢ÕßÉíÉÏ£¬±àÒëÆ÷ºÍ²Ù×÷ÏµÍ³¶ÔÄÚ´æµÄ¹ÜÀí²¢²»ÏñÔÚ¸ß¼¶ÓïÑÔ£¨Èç Java »ò Python£©ÖÐÄÇÃ´×Ô¶¯»¯¡£
-Òò´Ë£¬ÄÚ´æ¹ÜÀí´íÎó£¨Èç·ÃÎÊ·Ç·¨ÄÚ´æ¡¢Ô½½ç¡¢¿ÕÖ¸Õë¡¢ÄÚ´æÐ¹Â©µÈ£©ÍùÍùÊÇµ¼ÖÂ³ÌÐò±ÀÀ£»ò°²È«Â©¶´µÄ¸ù±¾Ô­Òò¡£
+#å®‰å…¨æ€§ä¸Žå†…å­˜ç®¡ç†çš„å…³ç³»ï¼š
+Cè¯­è¨€ä¸­çš„å†…å­˜ç®¡ç†è´£ä»»è½åœ¨å¼€å‘è€…èº«ä¸Šï¼Œç¼–è¯‘å™¨å’Œæ“ä½œç³»ç»Ÿå¯¹å†…å­˜çš„ç®¡ç†å¹¶ä¸åƒåœ¨é«˜çº§è¯­è¨€ï¼ˆå¦‚ Java æˆ– Pythonï¼‰ä¸­é‚£ä¹ˆè‡ªåŠ¨åŒ–ã€‚
+å› æ­¤ï¼Œå†…å­˜ç®¡ç†é”™è¯¯ï¼ˆå¦‚è®¿é—®éžæ³•å†…å­˜ã€è¶Šç•Œã€ç©ºæŒ‡é’ˆã€å†…å­˜æ³„æ¼ç­‰ï¼‰å¾€å¾€æ˜¯å¯¼è‡´ç¨‹åºå´©æºƒæˆ–å®‰å…¨æ¼æ´žçš„æ ¹æœ¬åŽŸå› ã€‚
 
-#Ô¤·À·Ç·¨ÄÚ´æ²Ù×÷µÄ·½·¨£º
-³õÊ¼»¯Ö¸Õë£ºÊ¼ÖÕ½«Ö¸Õë³õÊ¼»¯Îª NULL »òÖ¸ÏòÓÐÐ§ÄÚ´æÇøÓò£¬±ÜÃâÊ¹ÓÃÎ´³õÊ¼»¯µÄÖ¸Õë¡£
-¼ì²éÖ¸ÕëÓÐÐ§ÐÔ£ºÔÚ½âÒýÓÃÖ¸ÕëÖ®Ç°£¬Ê¼ÖÕ¼ì²éËüÊÇ·ñÎª NULL£¬±ÜÃâ¿ÕÖ¸Õë½âÒýÓÃ¡£
-±ß½ç¼ì²é£ºÈ·±£¶ÔÊý×éºÍ»º³åÇøµÄ·ÃÎÊ²»»á³¬³öÆä±ß½ç£¬¿ÉÒÔÊ¹ÓÃ sizeof »òÃ÷È·µÄ±ß½çÖµ½øÐÐ¼ì²é¡£
-Ê¹ÓÃ°²È«µÄ¿âº¯Êý£º±ÜÃâÊ¹ÓÃÒ×ÊÜ»º³åÇøÒç³ö¹¥»÷Ó°ÏìµÄº¯Êý£¨Èç strcpy()¡¢gets() µÈ£©£¬Ê¹ÓÃ¸ü°²È«µÄÌæ´úº¯Êý£¨Èç strncpy()¡¢fgets() µÈ£©
+#é¢„é˜²éžæ³•å†…å­˜æ“ä½œçš„æ–¹æ³•ï¼š
+åˆå§‹åŒ–æŒ‡é’ˆï¼šå§‹ç»ˆå°†æŒ‡é’ˆåˆå§‹åŒ–ä¸º NULL æˆ–æŒ‡å‘æœ‰æ•ˆå†…å­˜åŒºåŸŸï¼Œé¿å…ä½¿ç”¨æœªåˆå§‹åŒ–çš„æŒ‡é’ˆã€‚
+æ£€æŸ¥æŒ‡é’ˆæœ‰æ•ˆæ€§ï¼šåœ¨è§£å¼•ç”¨æŒ‡é’ˆä¹‹å‰ï¼Œå§‹ç»ˆæ£€æŸ¥å®ƒæ˜¯å¦ä¸º NULLï¼Œé¿å…ç©ºæŒ‡é’ˆè§£å¼•ç”¨ã€‚
+è¾¹ç•Œæ£€æŸ¥ï¼šç¡®ä¿å¯¹æ•°ç»„å’Œç¼“å†²åŒºçš„è®¿é—®ä¸ä¼šè¶…å‡ºå…¶è¾¹ç•Œï¼Œå¯ä»¥ä½¿ç”¨ sizeof æˆ–æ˜Žç¡®çš„è¾¹ç•Œå€¼è¿›è¡Œæ£€æŸ¥ã€‚
+ä½¿ç”¨å®‰å…¨çš„åº“å‡½æ•°ï¼šé¿å…ä½¿ç”¨æ˜“å—ç¼“å†²åŒºæº¢å‡ºæ”»å‡»å½±å“çš„å‡½æ•°ï¼ˆå¦‚ strcpy()ã€gets() ç­‰ï¼‰ï¼Œä½¿ç”¨æ›´å®‰å…¨çš„æ›¿ä»£å‡½æ•°ï¼ˆå¦‚ strncpy()ã€fgets() ç­‰ï¼‰
 
 =====================================================================================
 
-ÏµÍ³¿ØÖÆÌ¨£¬¿ÉÒÔÔÚ RTT ÖÕ¶ËÖ´ÐÐÔ¤ÉèÃüÁî£¬±ÈÈçÊäÈë reboot Ö´ÐÐÖØÆô.ÊäÈë m¡¢M »ò menu ³ö²Ëµ¥¡£
+ç³»ç»ŸæŽ§åˆ¶å°ï¼Œå¯ä»¥åœ¨ RTT ç»ˆç«¯æ‰§è¡Œé¢„è®¾å‘½ä»¤ï¼Œæ¯”å¦‚è¾“å…¥ reboot æ‰§è¡Œé‡å¯.è¾“å…¥ mã€M æˆ– menu å‡ºèœå•ã€‚
 
-RTTÉèÖÃ 
+RTTè®¾ç½® 
 input->"end of line"->none
 input->"echo input"->all enable
 
-#¿ØÖÆÌ¨ÄÚÖÃÃüÁî»ã×Ü
+#æŽ§åˆ¶å°å†…ç½®å‘½ä»¤æ±‡æ€»
 
-    ¹¦ÄÜ                ÃüÁî        ¼òÐ´        Êý×Öµ÷ÓÃ        ²ÎÊý
-c1:  ÖØÆô                reboot      r/R          0             ÎÞ
-c2:  ²éÑ¯°æ±¾            version     v/V          1             ÎÞ
-c3:  ²éÑ¯µ±Ç°ÈÎÎñÊý¾Ý     task        t/T         2              ÃüÁîÊ¾Àý£º"task" ´òÓ¡Ò»´Î£¬"task on" 10Hz´òÓ¡£¬"task off" ¹Ø±Õ10Hz´òÓ¡
-c4:  ²éÑ¯ cpu ¸ºÔØ       cpu        c/C          3             ÃüÁîÊ¾Àý£º"cpu" ´òÓ¡Ò»´Î£¬"cpu on" 10Hz´òÓ¡£¬"cpu off" ¹Ø±Õ10Hz´òÓ¡
-c5:  ´®¿Ú·¢ËÍ            uart       ÎÞ           ÎÞ            ÃüÁîÊ¾Àý£ºASCLL Ä£Ê½£º"uart6 hello"£¬HEX Ä£Ê½£º"uart6 -hex 68 65 6C 6C 6F"
-c6:  CAN·¢ËÍ             can        ÎÞ           ÎÞ             ÃüÁîÊ¾Àý£ºASCLL Ä£Ê½£º"can1 -id 1 hello"£¬HEX Ä£Ê½£º"can1 -id 1 -hex 68 65 6C 6C 6F"
-c7:  GPIOÊä³ö 
-ºÍ gpioÊäÈë»ØÏÔ¿ª¹Ø       gpio        ÎÞ           ÎÞ             ÃüÁîÊ¾Àý£ºÃüÁîÊ¾Àý£º"gpio pin_beep H", "gpio input on" or "gpio input off"
+    åŠŸèƒ½                å‘½ä»¤        ç®€å†™        æ•°å­—è°ƒç”¨        å‚æ•°
+c1:  é‡å¯                reboot      r/R          0             æ— 
+c2:  æŸ¥è¯¢ç‰ˆæœ¬            version     v/V          1             æ— 
+c3:  æŸ¥è¯¢å½“å‰ä»»åŠ¡æ•°æ®     task        t/T         2              å‘½ä»¤ç¤ºä¾‹ï¼š"task" æ‰“å°ä¸€æ¬¡ï¼Œ"task on" 10Hzæ‰“å°ï¼Œ"task off" å…³é—­10Hzæ‰“å°
+c4:  æŸ¥è¯¢ cpu è´Ÿè½½       cpu        c/C          3             å‘½ä»¤ç¤ºä¾‹ï¼š"cpu" æ‰“å°ä¸€æ¬¡ï¼Œ"cpu on" 10Hzæ‰“å°ï¼Œ"cpu off" å…³é—­10Hzæ‰“å°
+c5:  ä¸²å£å‘é€            uart       æ—            æ—             å‘½ä»¤ç¤ºä¾‹ï¼šASCLL æ¨¡å¼ï¼š"uart6 hello"ï¼ŒHEX æ¨¡å¼ï¼š"uart6 -hex 68 65 6C 6C 6F"
+c6:  CANå‘é€             can        æ—            æ—              å‘½ä»¤ç¤ºä¾‹ï¼šASCLL æ¨¡å¼ï¼š"can1 -id 1 hello"ï¼ŒHEX æ¨¡å¼ï¼š"can1 -id 1 -hex 68 65 6C 6C 6F"
+c7:  GPIOè¾“å‡º 
+å’Œ gpioè¾“å…¥å›žæ˜¾å¼€å…³       gpio        æ—            æ—              å‘½ä»¤ç¤ºä¾‹ï¼šå‘½ä»¤ç¤ºä¾‹ï¼š"gpio pin_beep H", "gpio input on" or "gpio input off"
 
-ÃüÁî -h: ¿É²é¿´ÃüÁîÊ¹ÓÃ¾ÙÀý£¬±ÈÈç uart -h
+å‘½ä»¤ -h: å¯æŸ¥çœ‹å‘½ä»¤ä½¿ç”¨ä¸¾ä¾‹ï¼Œæ¯”å¦‚ uart -h
 
 =====================================================================================
 
-Ê¹ÓÃ×¢Òâ£º
+ä½¿ç”¨æ³¨æ„ï¼š
 
-1.³¬Ê±ÈÎÎñºÍÖÜÆÚÈÎÎñ ÒÔ»Øµ÷º¯ÊýÃû³Æ×÷ÎªID£¬¹ÊÍ¬Ò»Ê±¿Ì£¬Í¬Ò»¸ö»Øµ÷º¯Êý²»Ö§³Ö¿ªÆô¶àÖÖ³¬Ê±»òÕßÖÜÆÚÈÎÎñ¡£
-¿ªÆô¶à¸ö£¬×îÐÂµÄ»á¸²¸Ç¾ÉµÄ¡£Í¬Ò»¸ö»Øµ÷¼´¿ªÆô³¬Ê±ÓÖ¿ªÆôÖÜÆÚ£¬ÊÇÔÊÐíµÄ¡£
+1.è¶…æ—¶ä»»åŠ¡å’Œå‘¨æœŸä»»åŠ¡ ä»¥å›žè°ƒå‡½æ•°åç§°ä½œä¸ºIDï¼Œæ•…åŒä¸€æ—¶åˆ»ï¼ŒåŒä¸€ä¸ªå›žè°ƒå‡½æ•°ä¸æ”¯æŒå¼€å¯å¤šç§è¶…æ—¶æˆ–è€…å‘¨æœŸä»»åŠ¡ã€‚
+å¼€å¯å¤šä¸ªï¼Œæœ€æ–°çš„ä¼šè¦†ç›–æ—§çš„ã€‚åŒä¸€ä¸ªå›žè°ƒå³å¼€å¯è¶…æ—¶åˆå¼€å¯å‘¨æœŸï¼Œæ˜¯å…è®¸çš„ã€‚
 
-2.ÖØÖÃ³¬Ê±ÈÎÎñ£¬Ö»ÐèÖØÐÂµ÷ÓÃ sys_timeout_start¡£³¬Ê±ÈÎÎñµ½´ïºó£¬»á×Ô¶¯ÊÍ·ÅÈÎÎñ£¬Ã»ÓÐ¸±×÷ÓÃ¡£¹Ø±Õºó£¬¿ÉÒÔÖØÐÂÉèÖÃ³¬Ê±Ê±¼ä¡£
+2.é‡ç½®è¶…æ—¶ä»»åŠ¡ï¼Œåªéœ€é‡æ–°è°ƒç”¨ sys_timeout_startã€‚è¶…æ—¶ä»»åŠ¡åˆ°è¾¾åŽï¼Œä¼šè‡ªåŠ¨é‡Šæ”¾ä»»åŠ¡ï¼Œæ²¡æœ‰å‰¯ä½œç”¨ã€‚å…³é—­åŽï¼Œå¯ä»¥é‡æ–°è®¾ç½®è¶…æ—¶æ—¶é—´ã€‚
 
-3.ËùÓÐÐèÒªÔÚÖ÷Ïß³ÌÂÖÑ¯µÄÈÎÎñ£¬±ØÐëÍ¨¹ý sys_task_start ×¢²áµ÷ÓÃ£¨²»ÔÊÐíÔÚ main º¯Êý while(1) ÏÂÌí¼ÓÆäËûº¯Êý£©£¬
-ÕâÑù²ÅÄÜ±£Ö¤ sys_wait ·Ç×èÈûµÈ´ý¹¦ÄÜÕý³£¡£
+3.æ‰€æœ‰éœ€è¦åœ¨ä¸»çº¿ç¨‹è½®è¯¢çš„ä»»åŠ¡ï¼Œå¿…é¡»é€šè¿‡ sys_task_start æ³¨å†Œè°ƒç”¨ï¼ˆä¸å…è®¸åœ¨ main å‡½æ•° while(1) ä¸‹æ·»åŠ å…¶ä»–å‡½æ•°ï¼‰ï¼Œ
+è¿™æ ·æ‰èƒ½ä¿è¯ sys_wait éžé˜»å¡žç­‰å¾…åŠŸèƒ½æ­£å¸¸ã€‚
 
-4.sys_wait ºÍ sys_wait_bare Ö»ÄÜÔÚ»¥³âÈÎÎñÖÐµ÷ÓÃ£¬Ê¹ÓÃ´ÎÊý²»ÏÞ£¬²»ÔÊÐíÇ¶Ì×µ÷ÓÃ£¨Ç¶Ì×ÈÕÖ¾»á±¨´í£©¡£
-²»½¨ÒéÔÚ»¥³âÈÎÎñµÄÇý¶¯ÖÐºÍ»¥³âÈÎÎñµÄ×Óº¯ÊýÖÐµ÷ÓÃ£¬ÈÝÒ×³öÏÖÇ¶Ì×¡£±£Ö¤²»Ç¶Ì×µÄÇé¿öÏÂ¿ÉÒÔÊ¹ÓÃ¡£
+4.sys_wait å’Œ sys_wait_bare åªèƒ½åœ¨äº’æ–¥ä»»åŠ¡ä¸­è°ƒç”¨ï¼Œä½¿ç”¨æ¬¡æ•°ä¸é™ï¼Œä¸å…è®¸åµŒå¥—è°ƒç”¨ï¼ˆåµŒå¥—æ—¥å¿—ä¼šæŠ¥é”™ï¼‰ã€‚
+ä¸å»ºè®®åœ¨äº’æ–¥ä»»åŠ¡çš„é©±åŠ¨ä¸­å’Œäº’æ–¥ä»»åŠ¡çš„å­å‡½æ•°ä¸­è°ƒç”¨ï¼Œå®¹æ˜“å‡ºçŽ°åµŒå¥—ã€‚ä¿è¯ä¸åµŒå¥—çš„æƒ…å†µä¸‹å¯ä»¥ä½¿ç”¨ã€‚
 
-5.sys_wait ºÍ sys_wait_bare µ÷ÓÃ»á×èÈûµ±Ç°ÈÎÎñ£¬µ«²»Ó°ÏìÆäËû²¢ÐÐÈÎÎñÖ´ÐÐ¡£Ïàµ±ÓÚ¹ÒÆðµ±Ç°ÈÎÎñ¡£
-¿ÉÒÔÓÃsys_wait_breakÖÐ¶ÏµÈ´ý£¬ÖÐ¶Ïºó·µ»Ø1£¬½¨ÒéÓ¦ÓÃ²ãÖ±½Ó·µ»Ø£¬²»ÔÙÖ´ÐÐµÈ´ýºóµÄÒµÎñ¡£
-¿ÉÒÔÓÃsys_wait_continueºöÂÔµÈ´ý£¬·µ»Ø0£¬¼ÌÐøÖ´ÐÐµÈ´ýºóµÄÒµÎñ¡£
+5.sys_wait å’Œ sys_wait_bare è°ƒç”¨ä¼šé˜»å¡žå½“å‰ä»»åŠ¡ï¼Œä½†ä¸å½±å“å…¶ä»–å¹¶è¡Œä»»åŠ¡æ‰§è¡Œã€‚ç›¸å½“äºŽæŒ‚èµ·å½“å‰ä»»åŠ¡ã€‚
+å¯ä»¥ç”¨sys_wait_breakä¸­æ–­ç­‰å¾…ï¼Œä¸­æ–­åŽè¿”å›ž1ï¼Œå»ºè®®åº”ç”¨å±‚ç›´æŽ¥è¿”å›žï¼Œä¸å†æ‰§è¡Œç­‰å¾…åŽçš„ä¸šåŠ¡ã€‚
+å¯ä»¥ç”¨sys_wait_continueå¿½ç•¥ç­‰å¾…ï¼Œè¿”å›ž0ï¼Œç»§ç»­æ‰§è¡Œç­‰å¾…åŽçš„ä¸šåŠ¡ã€‚
 
-6.sys_wait ÍÆ¼öÊ¹ÓÃ·½·¨
+6.sys_wait æŽ¨èä½¿ç”¨æ–¹æ³•
 
-µÈ´ýÇ°µÄÒµÎñ£¬½øÈë wait ºó¿ªÊ¼×èÈû
+ç­‰å¾…å‰çš„ä¸šåŠ¡ï¼Œè¿›å…¥ wait åŽå¼€å§‹é˜»å¡ž
 if(sys_wait(10))
     return;
-µÈ´ýÍê³ÉºóµÄÒµÎñ
+ç­‰å¾…å®ŒæˆåŽçš„ä¸šåŠ¡
 
-7.½¨Òé²»ÒªÊ¹ÓÃ sys_delay£¬ÌØ±ðÊÇÖÜÆÚµ÷ÓÃ£¬»á´ó´ó½µµÍÏµÍ³ÐÔÄÜ¡£sys_delay_us <100us £¬¿ÉÒÔ°²È«µ÷ÓÃ¡£
+7.å»ºè®®ä¸è¦ä½¿ç”¨ sys_delayï¼Œç‰¹åˆ«æ˜¯å‘¨æœŸè°ƒç”¨ï¼Œä¼šå¤§å¤§é™ä½Žç³»ç»Ÿæ€§èƒ½ã€‚sys_delay_us <100us ï¼Œå¯ä»¥å®‰å…¨è°ƒç”¨ã€‚
 
-8.ÔÚ»¥³âÈÎÎñ¶¥²ã£¬¿ÉÒÔÊ¹ÓÃ sys_wait £¬´ïµ½ sys_delay µÄÏàÍ¬Ð§¹û¡£
+8.åœ¨äº’æ–¥ä»»åŠ¡é¡¶å±‚ï¼Œå¯ä»¥ä½¿ç”¨ sys_wait ï¼Œè¾¾åˆ° sys_delay çš„ç›¸åŒæ•ˆæžœã€‚
 
-9.»¥³âÈÎÎñÊÇÖ÷ÒªµÄÒµÎñÖ´ÐÐ³¡¾°£¬²¢ÐÐÈÎÎñÊÇ¸¨Öú·þÎñ¡£
+9.äº’æ–¥ä»»åŠ¡æ˜¯ä¸»è¦çš„ä¸šåŠ¡æ‰§è¡Œåœºæ™¯ï¼Œå¹¶è¡Œä»»åŠ¡æ˜¯è¾…åŠ©æœåŠ¡ã€‚
 
-10.ÔÚËùÓÐÈÎÎñ²Ù×÷ÖÐ£¬µ÷ÓÃstopºó£¬ÈÎÎñ±»ÊÍ·Å£¬Ã»ÓÐ¸±×÷ÓÃ¡£
+10.åœ¨æ‰€æœ‰ä»»åŠ¡æ“ä½œä¸­ï¼Œè°ƒç”¨stopåŽï¼Œä»»åŠ¡è¢«é‡Šæ”¾ï¼Œæ²¡æœ‰å‰¯ä½œç”¨ã€‚
 
-11.NVIC ·Ö×éÒÑ¾­ÅäÖÃÎª 16 ¼¶ÏìÓ¦£¬²»Ö§³ÖÇÀÕ¼£¬Ëû´¦²»Ó¦ÔÙµ÷ÓÃ NVIC_PriorityGroupConfig¡£
+11.NVIC åˆ†ç»„å·²ç»é…ç½®ä¸º 16 çº§å“åº”ï¼Œä¸æ”¯æŒæŠ¢å ï¼Œä»–å¤„ä¸åº”å†è°ƒç”¨ NVIC_PriorityGroupConfigã€‚
 
-12.ÅäÖÃÍâÉèÖÐ¶ÏÊ±£¬Ô¤ÓÅÏÈ¼¶ºãÎª0£¬×ÓÓÅÏÈ¼¶Ä¬ÈÏÉèÎªºê PRIO_DEFAULT£¬ÈçÓöµ½ÏìÓ¦ÑÓ³Ù£¬ÔÙµ÷Õû¡£
+12.é…ç½®å¤–è®¾ä¸­æ–­æ—¶ï¼Œé¢„ä¼˜å…ˆçº§æ’ä¸º0ï¼Œå­ä¼˜å…ˆçº§é»˜è®¤è®¾ä¸ºå® PRIO_DEFAULTï¼Œå¦‚é‡åˆ°å“åº”å»¶è¿Ÿï¼Œå†è°ƒæ•´ã€‚
 
-            ÖÐ¶ÏÓÅÏÈ¼¶·ÖÅä±í
+            ä¸­æ–­ä¼˜å…ˆçº§åˆ†é…è¡¨
 SysTick_IRQn                    PRIO_HIGHEST 0
-ÍâÉèÖÐ¶Ï                         PRIO_DEFAULT 5
-sloop »ù´¡¶¨Ê±Æ÷              PRIO_LOWEST 15
-main Ö÷Ïß³Ì                      16£¨Ïàµ±ÓÚ£©
+å¤–è®¾ä¸­æ–­                         PRIO_DEFAULT 5
+sloop åŸºç¡€å®šæ—¶å™¨              PRIO_LOWEST 15
+main ä¸»çº¿ç¨‹                      16ï¼ˆç›¸å½“äºŽï¼‰
 
-13.ÐÂÔö»¥³âÈÎÎñÐèÒªÔÚ main.h ÉùÃ÷£¬ÔÚ main.c ÖÐÈõ¶¨Òå£¬ÔÚÓÃ»§´´½¨µÄ task ÎÄ¼þÖÐÊµÏÖ¡£
+13.æ–°å¢žäº’æ–¥ä»»åŠ¡éœ€è¦åœ¨ main.h å£°æ˜Žï¼Œåœ¨ main.c ä¸­å¼±å®šä¹‰ï¼Œåœ¨ç”¨æˆ·åˆ›å»ºçš„ task æ–‡ä»¶ä¸­å®žçŽ°ã€‚
 
-14. ÔÚ bl_config.h ÖÐ¿ÉÒÔ¿ªÆô¿´ÃÅ¹·£¬Ä¬ÈÏ²»ÆôÓÃ¡£
+14. åœ¨ bl_config.h ä¸­å¯ä»¥å¼€å¯çœ‹é—¨ç‹—ï¼Œé»˜è®¤ä¸å¯ç”¨ã€‚
 
-15.ÔÚ bl_config.h ÖÐ¿ªÆôÐÐÎªÈÕÖ¾¹¦ÄÜ£¬Ä¬ÈÏÆôÓÃ¡£
-¿ªÆôÐÐÎªÈÕÖ¾ºó£¬»á¶ÔÏµÍ³ API ½øÐÐ´òÓ¡ÔöÇ¿¡£¼´ÔÚµ÷ÓÃÏµÍ³ API Ê±»áÓÐÏàÓ¦ÈÕÖ¾Êä³ö¡£
-Õâ¶Ô·ÖÎöÏµÍ³¹¤×÷Á÷³Ì»áÓÐ°ïÖú¡£
+15.åœ¨ bl_config.h ä¸­å¼€å¯è¡Œä¸ºæ—¥å¿—åŠŸèƒ½ï¼Œé»˜è®¤å¯ç”¨ã€‚
+å¼€å¯è¡Œä¸ºæ—¥å¿—åŽï¼Œä¼šå¯¹ç³»ç»Ÿ API è¿›è¡Œæ‰“å°å¢žå¼ºã€‚å³åœ¨è°ƒç”¨ç³»ç»Ÿ API æ—¶ä¼šæœ‰ç›¸åº”æ—¥å¿—è¾“å‡ºã€‚
+è¿™å¯¹åˆ†æžç³»ç»Ÿå·¥ä½œæµç¨‹ä¼šæœ‰å¸®åŠ©ã€‚
 
-16.»¥³âÈÎÎñÓÐÈý¸ö½×¶Î£¬
-a1.³õÊ¼»¯½×¶Î£¨_INIT ºÍ _FREE£©
-a2.ÔËÐÐ½×¶Î _RUN;Ö®ºó
-a3.ÔËÐÐÖÕÖ¹£¨_FREE; ºÍ _RUN;£©
+16.äº’æ–¥ä»»åŠ¡æœ‰ä¸‰ä¸ªé˜¶æ®µï¼Œ
+a1.åˆå§‹åŒ–é˜¶æ®µï¼ˆ_INIT å’Œ _FREEï¼‰
+a2.è¿è¡Œé˜¶æ®µ _RUN;ä¹‹åŽ
+a3.è¿è¡Œç»ˆæ­¢ï¼ˆ_FREE; å’Œ _RUN;ï¼‰
 
-17._INIT _FREE ºÍ _RUN ±ØÐëÊµÏÖ£¬Îª¿ÕÃ»¹ØÏµ¡£ÒòÎªÈÎÎñÌø×ªÒÀÀµËü¡£
+17._INIT _FREE å’Œ _RUN å¿…é¡»å®žçŽ°ï¼Œä¸ºç©ºæ²¡å…³ç³»ã€‚å› ä¸ºä»»åŠ¡è·³è½¬ä¾èµ–å®ƒã€‚
 
-18. systick ºÍ tim7 Á½¸öÍâÉè£¬ÄÚºËÒÑÕ¼ÓÃ£¬Ó¦ÓÃ²ã²»ÒªÔÙÊ¹ÓÃ¡£
+18. systick å’Œ tim7 ä¸¤ä¸ªå¤–è®¾ï¼Œå†…æ ¸å·²å ç”¨ï¼Œåº”ç”¨å±‚ä¸è¦å†ä½¿ç”¨ã€‚
 
-19. sloop ²»ÊÊÓÃÔËÐÐÊ±¼ä³¤µÄÈÎÎñ£¬±ÈÈç×öÁ¬ÐøFFT£¬Ê±¼ä³¬¹ý1ms¡£
-Èç¹ûÊÇÕâÖÖÈÎÎñ½¨ÒéÓÃ×´Ì¬»ú²ð·Ö»òÕßÖ±½Ó²ð·Ö³É¸üÐ¡µÄÈÎÎñ¡£²ð·Öºó£¬Ð¡ÈÎÎñµÄÖ´ÐÐÖÜÆÚÓ¦Ð¡ÓÚ10us¡£
+19. sloop ä¸é€‚ç”¨è¿è¡Œæ—¶é—´é•¿çš„ä»»åŠ¡ï¼Œæ¯”å¦‚åšè¿žç»­FFTï¼Œæ—¶é—´è¶…è¿‡1msã€‚
+å¦‚æžœæ˜¯è¿™ç§ä»»åŠ¡å»ºè®®ç”¨çŠ¶æ€æœºæ‹†åˆ†æˆ–è€…ç›´æŽ¥æ‹†åˆ†æˆæ›´å°çš„ä»»åŠ¡ã€‚æ‹†åˆ†åŽï¼Œå°ä»»åŠ¡çš„æ‰§è¡Œå‘¨æœŸåº”å°äºŽ10usã€‚
 
-20.ÍÆ¼öÊ¹ÓÃ V5 °æ±¾±àÒëÆ÷£¬ËÙ¶È¸ü¿ì. ±àÒëÓÅ»¯µÈ¼¶£¬ÍÆ¼öÊ¹ÓÃ -O2.
+20.æŽ¨èä½¿ç”¨ V5 ç‰ˆæœ¬ç¼–è¯‘å™¨ï¼Œé€Ÿåº¦æ›´å¿«. ç¼–è¯‘ä¼˜åŒ–ç­‰çº§ï¼ŒæŽ¨èä½¿ç”¨ -O2.
 
 =====================================================================================
 
-¸üÐÂÈÕÖ¾
+æ›´æ–°æ—¥å¿—
 
 2025-3-11
-feat:¿ØÖÆÌ¨ÐÂÔö GPIO Êä³öÃüÁî
-feat: ¿ØÖÆÌ¨ÐÂÔö gpio ÊäÈë»ØÏÔ¿ª¹Ø
+feat:æŽ§åˆ¶å°æ–°å¢ž GPIO è¾“å‡ºå‘½ä»¤
+feat: æŽ§åˆ¶å°æ–°å¢ž gpio è¾“å…¥å›žæ˜¾å¼€å…³
 
 2025-3-10
-feat: ¾«¼ò GPIO API
+feat: ç²¾ç®€ GPIO API
 
 2025-3-3
-feat:È«ÐÂµÄgpioÅäÖÃÄ£°å
-optimiz: ÒÆ³ýÏµÍ³API£º sys_wait_for ºÍ sys_delay_nonblock
-optimiz: ¼ò»¯demoÂß¼­
-feat£ºreadme.txt ¼ÓÈë mdk ¹¤³Ì
+feat:å…¨æ–°çš„gpioé…ç½®æ¨¡æ¿
+optimiz: ç§»é™¤ç³»ç»ŸAPIï¼š sys_wait_for å’Œ sys_delay_nonblock
+optimiz: ç®€åŒ–demoé€»è¾‘
+featï¼šreadme.txt åŠ å…¥ mdk å·¥ç¨‹
 
 2025-2-27
-feat: readme ÀïÔö¼ÓÒ»Ð©Éè¼Æ½¨Òé
-feat: ÐÂÔö³£¼ûµÄÄÚ´æ·Ç·¨²Ù×÷ÌáÊ¾
+feat: readme é‡Œå¢žåŠ ä¸€äº›è®¾è®¡å»ºè®®
+feat: æ–°å¢žå¸¸è§çš„å†…å­˜éžæ³•æ“ä½œæç¤º
 
 2025-2-26
-feat: uart1~6 ¶¼ÑéÖ¤Í¨¹ý£¬¿ØÖÆÌ¨Ìá¹© uart ·¢ËÍÖ§³Ö
+feat: uart1~6 éƒ½éªŒè¯é€šè¿‡ï¼ŒæŽ§åˆ¶å°æä¾› uart å‘é€æ”¯æŒ
 
 2025-2-19
-feat: hardfault Ôö¼ÓÕ»½âÎö£¬Å×³öÒÉËÆ³ö´í´úÂëµÄÎ»ÖÃ£¨¼´µØÖ·£©
+feat: hardfault å¢žåŠ æ ˆè§£æžï¼ŒæŠ›å‡ºç–‘ä¼¼å‡ºé”™ä»£ç çš„ä½ç½®ï¼ˆå³åœ°å€ï¼‰
 
 2025-2-13
-feat: readme ÐÂÔöÄ¿Â¼½á¹¹ËµÃ÷
+feat: readme æ–°å¢žç›®å½•ç»“æž„è¯´æ˜Ž
 
 2025-2-8
-feat:ÐÂÔöÈÎÎñÖÜÆÚÍ³¼Æ£¬¿ØÖÆÌ¨ task on ÃüÁî¿É²é¿´¡£
+feat:æ–°å¢žä»»åŠ¡å‘¨æœŸç»Ÿè®¡ï¼ŒæŽ§åˆ¶å° task on å‘½ä»¤å¯æŸ¥çœ‹ã€‚
 
 2025-2-7
-feat: Ê¹ÓÃ×¢Òâ Ìí¼Ó ¹ØÓÚÖÐ¶Ï´¦ÀíµÄ×î¼ÑÊµ¼ù
-feat:ÐÂÔöus¼¶ÑÓÊ± sys_delay_us ºÍ sys_get_us, Í¨¹ýtim7 ¾«È·¶¨Ê±µÄ£¬µ«²»²úÉúÖÐ¶Ï¡£
+feat: ä½¿ç”¨æ³¨æ„ æ·»åŠ  å…³äºŽä¸­æ–­å¤„ç†çš„æœ€ä½³å®žè·µ
+feat:æ–°å¢žusçº§å»¶æ—¶ sys_delay_us å’Œ sys_get_us, é€šè¿‡tim7 ç²¾ç¡®å®šæ—¶çš„ï¼Œä½†ä¸äº§ç”Ÿä¸­æ–­ã€‚
 
 2025-2-2
-optimiz:ÐÞ¸Ä´òÓ¡ÈÕÖ¾api Ãû³Æ£¬±ÈÈç sys_printf_func ÐÞ¸ÄÎª sys_prt_withFunc
-feat: ÃüÁîÔö¼Ó -h ²é¿´ÃüÁîÊ¹ÓÃ¾ÙÀý£¬±ÈÈç uart -h 
+optimiz:ä¿®æ”¹æ‰“å°æ—¥å¿—api åç§°ï¼Œæ¯”å¦‚ sys_printf_func ä¿®æ”¹ä¸º sys_prt_withFunc
+feat: å‘½ä»¤å¢žåŠ  -h æŸ¥çœ‹å‘½ä»¤ä½¿ç”¨ä¸¾ä¾‹ï¼Œæ¯”å¦‚ uart -h 
 
 2025-1-27
-feat: Í¨Ñ¶¿Ú´®¿ÚºÍcan ÅäÖÃ¼¯³ÉÔÚ com_config.h¡£service_api.h »ã×ÜÁË·þÎñ²ãapi
+feat: é€šè®¯å£ä¸²å£å’Œcan é…ç½®é›†æˆåœ¨ com_config.hã€‚service_api.h æ±‡æ€»äº†æœåŠ¡å±‚api
 
 2025-1-24
-feat:¿ØÖÆÌ¨ÐÂÔö²¢ÐÐÈÎÎñºÍÖÜÆÚÈÎÎñ²éÑ¯£¬¿ªÆôÐÐÎªÈÕÖ¾²ÅÄÜÉúÐ§
-feat: ¿ØÖÆÌ¨´®¿Ú ºÍ can Ö§³Ö·¢ËÍ16½øÖÆ¡£ÃüÁî¸ñÊ½ uart -hex 30 31 ¡­¡­,²»´ø -hex Ä¬ÈÏ·¢ASCLLÂë¡£
+feat:æŽ§åˆ¶å°æ–°å¢žå¹¶è¡Œä»»åŠ¡å’Œå‘¨æœŸä»»åŠ¡æŸ¥è¯¢ï¼Œå¼€å¯è¡Œä¸ºæ—¥å¿—æ‰èƒ½ç”Ÿæ•ˆ
+feat: æŽ§åˆ¶å°ä¸²å£ å’Œ can æ”¯æŒå‘é€16è¿›åˆ¶ã€‚å‘½ä»¤æ ¼å¼ uart -hex 30 31 â€¦â€¦,ä¸å¸¦ -hex é»˜è®¤å‘ASCLLç ã€‚
 
 2025-1-23
-feat: canÖ§³Ö FIFO
+feat: canæ”¯æŒ FIFO
 
 2025-1-20
-feat:¿ØÖÆÌ¨ÐÂÔö²éÑ¯ mcu ¸ºÔØÃüÁî¡£
-feat:ÒÆ³ý API sys_cycle_flag_start¡£
-feat:Èí¶¨Ê±ÈÎÎñ²»ÔÙÅÜÔÚmsÖÐ¶Ï£¬¸Äµ½Ö÷Ïß³ÌloopÖÐ¡£ÓÐÖúÓÚ½µµÍÕ»¿Õ¼ä£¬¼õÉÙÕ»ÈëÕ»³ö£¬ÌáÉýÏµÍ³ÐÔÄÜºÍÎÈ¶¨ÐÔ¡£
-feat:ÖÐ¶Ï¸ÄÎª16¼¶ÏìÓ¦ÓÅÏÈ¼¶£¬²»ÔÙÖ§³ÖÇÀÕ¼£¬ÓÐÖúÓÚ½µµÍÕ»¿Õ¼ä£¬¼õÉÙÕ»ÈëÕ»³ö£¬ÌáÉýÏµÍ³ÐÔÄÜºÍÎÈ¶¨ÐÔ¡£
-Ò²²»»áÔÙÓÐËÀËøÎÊÌâ¡£µ«ÒªÇóÖÐ¶Ï´¦ÀíÒª¸É¾»ÀûË÷£¬´¦ÀíÊµÊ±Êý¾Ý£¬¿ìËÙÍË³ö¡£
+feat:æŽ§åˆ¶å°æ–°å¢žæŸ¥è¯¢ mcu è´Ÿè½½å‘½ä»¤ã€‚
+feat:ç§»é™¤ API sys_cycle_flag_startã€‚
+feat:è½¯å®šæ—¶ä»»åŠ¡ä¸å†è·‘åœ¨msä¸­æ–­ï¼Œæ”¹åˆ°ä¸»çº¿ç¨‹loopä¸­ã€‚æœ‰åŠ©äºŽé™ä½Žæ ˆç©ºé—´ï¼Œå‡å°‘æ ˆå…¥æ ˆå‡ºï¼Œæå‡ç³»ç»Ÿæ€§èƒ½å’Œç¨³å®šæ€§ã€‚
+feat:ä¸­æ–­æ”¹ä¸º16çº§å“åº”ä¼˜å…ˆçº§ï¼Œä¸å†æ”¯æŒæŠ¢å ï¼Œæœ‰åŠ©äºŽé™ä½Žæ ˆç©ºé—´ï¼Œå‡å°‘æ ˆå…¥æ ˆå‡ºï¼Œæå‡ç³»ç»Ÿæ€§èƒ½å’Œç¨³å®šæ€§ã€‚
+ä¹Ÿä¸ä¼šå†æœ‰æ­»é”é—®é¢˜ã€‚ä½†è¦æ±‚ä¸­æ–­å¤„ç†è¦å¹²å‡€åˆ©ç´¢ï¼Œå¤„ç†å®žæ—¶æ•°æ®ï¼Œå¿«é€Ÿé€€å‡ºã€‚
 
 2025-1-16
-feat:´®¿Ú½ÓÊÕ DMA + FIFO OK
-feat:base_init ¸Ä³ÉÈÎÎñ task_baseInit¡£¼´Ê¼×æÈÎÎñ¡£
+feat:ä¸²å£æŽ¥æ”¶ DMA + FIFO OK
+feat:base_init æ”¹æˆä»»åŠ¡ task_baseInitã€‚å³å§‹ç¥–ä»»åŠ¡ã€‚
 
 2025-1-15
-feat:´®¿Ú·¢ËÍ DMA + FIFO OK
-feat:ÖØ¹¹»¥³âÈÎÎñ£¬Ô­¾²Ì¬µ÷ÓÃ¸ÄÎª¶¯Ì¬µ÷ÓÃ¡£
-feat:ÐÂÔö _FREE ºÍ _RUN£¬·½±ãÔÚÈÎÎñ½áÊøÊ±£¬ÊÍ·Å×ÊÔ´¡£±ÈÈçÖÜÆÚÈÎÎñ¡£
+feat:ä¸²å£å‘é€ DMA + FIFO OK
+feat:é‡æž„äº’æ–¥ä»»åŠ¡ï¼ŒåŽŸé™æ€è°ƒç”¨æ”¹ä¸ºåŠ¨æ€è°ƒç”¨ã€‚
+feat:æ–°å¢ž _FREE å’Œ _RUNï¼Œæ–¹ä¾¿åœ¨ä»»åŠ¡ç»“æŸæ—¶ï¼Œé‡Šæ”¾èµ„æºã€‚æ¯”å¦‚å‘¨æœŸä»»åŠ¡ã€‚
 
 2025-1-14
-feat:´®¿ÚÖ§³ÖDMAÊÕ·¢
-feat:¿ØÖÆÌ¨ÐÂÔö²éÑ¯µ±Ç°ÈÎÎñÃüÁî task ¡£»¥³âÈÎÎñÐèÊµÏÖ INIT£¬²ÅÖ§³Ö²éÑ¯¡£
+feat:ä¸²å£æ”¯æŒDMAæ”¶å‘
+feat:æŽ§åˆ¶å°æ–°å¢žæŸ¥è¯¢å½“å‰ä»»åŠ¡å‘½ä»¤ task ã€‚äº’æ–¥ä»»åŠ¡éœ€å®žçŽ° INITï¼Œæ‰æ”¯æŒæŸ¥è¯¢ã€‚
 
 2025-1-13
-feat:ÐÂÔö idle ¿ÕÏÐÈÎÎñ£¬»¥³âÈÎÎñÃ»ÊÂ¿É×ö¿ÉÍ£ÁôÔÚ idle
+feat:æ–°å¢ž idle ç©ºé—²ä»»åŠ¡ï¼Œäº’æ–¥ä»»åŠ¡æ²¡äº‹å¯åšå¯åœç•™åœ¨ idle
 
-feat:ÐÂÔö task_end »¥³âÈÎÎñ»ØÊÕº¯Êý¡£
-Ëü»áÔÚÌø×ªµ½ÆäËûÈÎÎñÇ°£¬ÊÍ·ÅÒ»Ð©ÔÚµ±Ç°ÈÎÎñÖÐ¿ªÆôµÄ×ÊÔ´£¬±ÈÈç ÖÜÆÚÈÎÎñ¡£
-ËùÒÔÄã²»ÐèÒªÔÚÃ¿´¦ sys_goto Ç°×öÊÍ·Å²Ù×÷¡£
-Èõ¶¨Òå£¬¸ù¾ÝÐèÇóÊµÏÖ£¬¿ÉÒÔ²»ÊµÏÖ¡£
+feat:æ–°å¢ž task_end äº’æ–¥ä»»åŠ¡å›žæ”¶å‡½æ•°ã€‚
+å®ƒä¼šåœ¨è·³è½¬åˆ°å…¶ä»–ä»»åŠ¡å‰ï¼Œé‡Šæ”¾ä¸€äº›åœ¨å½“å‰ä»»åŠ¡ä¸­å¼€å¯çš„èµ„æºï¼Œæ¯”å¦‚ å‘¨æœŸä»»åŠ¡ã€‚
+æ‰€ä»¥ä½ ä¸éœ€è¦åœ¨æ¯å¤„ sys_goto å‰åšé‡Šæ”¾æ“ä½œã€‚
+å¼±å®šä¹‰ï¼Œæ ¹æ®éœ€æ±‚å®žçŽ°ï¼Œå¯ä»¥ä¸å®žçŽ°ã€‚
 
-feat:ÔÚÖÜÆÚÈÎÎñ»ù´¡ÉÏÐÂÔö¶à´ÎÈÎÎñ£¬¿ÉÖ¸¶¨Ö´ÐÐ´ÎÊýºÍ¼ä¸ôÊ±¼ä¡£¿ÉÓÃÓÚ·äÃùÆ÷¶à´ÎÃù½Ð¡¢´®¿Ú¶à´Î¶¨Ê±ÖØ·¢
+feat:åœ¨å‘¨æœŸä»»åŠ¡åŸºç¡€ä¸Šæ–°å¢žå¤šæ¬¡ä»»åŠ¡ï¼Œå¯æŒ‡å®šæ‰§è¡Œæ¬¡æ•°å’Œé—´éš”æ—¶é—´ã€‚å¯ç”¨äºŽèœ‚é¸£å™¨å¤šæ¬¡é¸£å«ã€ä¸²å£å¤šæ¬¡å®šæ—¶é‡å‘
 
-feat:ÐÂÔö sys_wait_bare ·Ç×èÈûÂãµÈ´ý£¬Ö±µ½ break or continue¡£ÎÞÐè´«ÈëµÈ´ýÌõ¼þ¡£ÊÊÓÃ¶àÌõ¼þ¡£
-Ïàµ±ÓÚ¹ÒÆð£¬Íâ²¿Í¨¹ý sys_wait_break »ò sys_wait_continue ´ò¶Ï¡£
+feat:æ–°å¢ž sys_wait_bare éžé˜»å¡žè£¸ç­‰å¾…ï¼Œç›´åˆ° break or continueã€‚æ— éœ€ä¼ å…¥ç­‰å¾…æ¡ä»¶ã€‚é€‚ç”¨å¤šæ¡ä»¶ã€‚
+ç›¸å½“äºŽæŒ‚èµ·ï¼Œå¤–éƒ¨é€šè¿‡ sys_wait_break æˆ– sys_wait_continue æ‰“æ–­ã€‚
 
-feat:ÐÂÔö sys_is_waiting£¬¿ÉÒÔ²éÑ¯µÈ´ý×´Ì¬¡£
+feat:æ–°å¢ž sys_is_waitingï¼Œå¯ä»¥æŸ¥è¯¢ç­‰å¾…çŠ¶æ€ã€‚
 
-feat:¿ØÖÆÌ¨ÐÂÔö²éÑ¯°æ±¾ÃüÁî version £¬¿ÉÒÔÍ¨¹ý sys_set_version ÉèÖÃ°æ±¾¡£
+feat:æŽ§åˆ¶å°æ–°å¢žæŸ¥è¯¢ç‰ˆæœ¬å‘½ä»¤ version ï¼Œå¯ä»¥é€šè¿‡ sys_set_version è®¾ç½®ç‰ˆæœ¬ã€‚
 
 2025-1-10
-feat:ÐÂÔö·äÃùÆ÷Çý¶¯£¬Ö§³Ö¶à´ÎÃù½Ð
-feat:ÐÂÔöÔËÐÐµÆÇý¶¯
+feat:æ–°å¢žèœ‚é¸£å™¨é©±åŠ¨ï¼Œæ”¯æŒå¤šæ¬¡é¸£å«
+feat:æ–°å¢žè¿è¡Œç¯é©±åŠ¨
 
 2025-1-9
-ÐÂÔö²ÎÊý±£´æÇý¶¯ºÍÑÝÊ¾£¬Ä¬ÈÏÒÔ Flash Îª´æ´¢½éÖÊ£¬¿ÉÅäÖÃÎªEEP(EEPÓÐ32×Ö½ÚÏÞÖÆ)
+æ–°å¢žå‚æ•°ä¿å­˜é©±åŠ¨å’Œæ¼”ç¤ºï¼Œé»˜è®¤ä»¥ Flash ä¸ºå­˜å‚¨ä»‹è´¨ï¼Œå¯é…ç½®ä¸ºEEP(EEPæœ‰32å­—èŠ‚é™åˆ¶)
 
 2025-1-6
-ÐÂÔöÏµÍ³¿ØÖÆÌ¨£¬¿ÉÒÔÔÚ RTT ÖÕ¶ËÖ´ÐÐÔ¤ÉèÃüÁî£¬±ÈÈçÊäÈë reboot Ö´ÐÐÖØÆô.ÊäÈë m ³ö²Ëµ¥¡£
-Ö§³ÖÊäÈë²ÎÊý£¬Èç test -p 6.88
-¿ØÖÆÌ¨¿ÉÓÃÓÚ³õÆÚÔÚÏßµ÷ÊÔÓ²¼þ£¬ÔÚÏßµ÷ÊÔÔË¶¯µÈ
+æ–°å¢žç³»ç»ŸæŽ§åˆ¶å°ï¼Œå¯ä»¥åœ¨ RTT ç»ˆç«¯æ‰§è¡Œé¢„è®¾å‘½ä»¤ï¼Œæ¯”å¦‚è¾“å…¥ reboot æ‰§è¡Œé‡å¯.è¾“å…¥ m å‡ºèœå•ã€‚
+æ”¯æŒè¾“å…¥å‚æ•°ï¼Œå¦‚ test -p 6.88
+æŽ§åˆ¶å°å¯ç”¨äºŽåˆæœŸåœ¨çº¿è°ƒè¯•ç¡¬ä»¶ï¼Œåœ¨çº¿è°ƒè¯•è¿åŠ¨ç­‰
 
 2025-1-4
-ÐÂÔöµ¥´ÎÈÎÎñAPI sys_task_once£¬Ö»Ö´ÐÐÒ»´Î£¬³ÙÖÍµ½ loop ÀïÖ´ÐÐ¡£¿ÉÓÃÓÚÖÐ¶ÏÖÐ¸´ÔÓÂß¼­ÏÂ·ÅÖ´ÐÐ¡£
+æ–°å¢žå•æ¬¡ä»»åŠ¡API sys_task_onceï¼Œåªæ‰§è¡Œä¸€æ¬¡ï¼Œè¿Ÿæ»žåˆ° loop é‡Œæ‰§è¡Œã€‚å¯ç”¨äºŽä¸­æ–­ä¸­å¤æ‚é€»è¾‘ä¸‹æ”¾æ‰§è¡Œã€‚
 
 2024-12-31
-ÐÂÔö¿ÉÅäÖÃÆôÓÃµÄ¿´ÃÅ¹·£¬³¬Ê±Ê±¼ä 1s£¬Ä¬ÈÏ²»ÆôÓÃ
-ÐÂÔöÐÐÎªÈÕÖ¾£¬¿ÉÔÚ bl_config.h ¿ªÆô£¬ÀûÓÚ·ÖÎöÒµÎñ¹¤×÷Á÷¡£
-ÈÕÖ¾ÐÂÔöÊ±¼ä´Á[day h:m:s.ms]
+æ–°å¢žå¯é…ç½®å¯ç”¨çš„çœ‹é—¨ç‹—ï¼Œè¶…æ—¶æ—¶é—´ 1sï¼Œé»˜è®¤ä¸å¯ç”¨
+æ–°å¢žè¡Œä¸ºæ—¥å¿—ï¼Œå¯åœ¨ bl_config.h å¼€å¯ï¼Œåˆ©äºŽåˆ†æžä¸šåŠ¡å·¥ä½œæµã€‚
+æ—¥å¿—æ–°å¢žæ—¶é—´æˆ³[day h:m:s.ms]
 
 2024-12-30
-ÐÂÔöÏµÍ³ÐÄÌø£¬ÔÚ terminal1 ´°¿Ú´òÓ¡£¬¿ÉÓÃÓÚÅÐ¶ÏËÀ»úÓë·ñ
+æ–°å¢žç³»ç»Ÿå¿ƒè·³ï¼Œåœ¨ terminal1 çª—å£æ‰“å°ï¼Œå¯ç”¨äºŽåˆ¤æ–­æ­»æœºä¸Žå¦
 
 2024-12-25
-¾«¼ò»¥³âÈÎÎñ
-ÐÂÔö´íÎóÈÕÖ¾£¬´òÓ¡Ô´ÂëÎ»ÖÃ sys_error
-ÐÂÔö±äÁ¿´òÓ¡ºê sys_prt_var
+ç²¾ç®€äº’æ–¥ä»»åŠ¡
+æ–°å¢žé”™è¯¯æ—¥å¿—ï¼Œæ‰“å°æºç ä½ç½® sys_error
+æ–°å¢žå˜é‡æ‰“å°å® sys_prt_var
 
 2024-12-20
 V1.0
