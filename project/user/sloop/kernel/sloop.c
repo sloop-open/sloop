@@ -96,7 +96,7 @@ static int loop_us;
 void sloop_init(void)
 {
     sys_prt_brYellow("==================================");
-    sys_prt_brYellow("============ sloop ============");
+    sys_prt_brYellow("========= sloop  (^-^) ==========");
     sys_prt_brYellow("==================================");
 
     mcu_base_timer_init();

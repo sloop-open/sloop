@@ -1,3 +1,10 @@
+
+嵌入式微处理器 公众号为 sloop 推广
+https://mp.weixin.qq.com/s/SuwIDmhoJ94_5aH0qMlEzA
+
+CSDN blog
+https://blog.csdn.net/caowent/article/details/146963318?spm=1001.2014.3001.5502
+
 这是一个嵌入式裸机框架,提供一套API,方便管理多种任务,比如超时任务/周期任务/并行任务/互斥任务等。
 有 sys_wait 和 sys_wait_bare 这两个非阻塞等待 API ，支持挂起当前互斥任务，但不阻塞并行任务。
 
@@ -13,40 +20,42 @@
 /project
 ├── Bin/                                # 可执行文件目录
 ├── Libraries/                          # MCU 库文件
-│   ├── CMSIS                               # CMSIS
-│   └── STM32F2xx_StdPeriph_Driver          # ST标准外设库
+│   ├── CMSIS                           # CMSIS
+│   └── STM32F2xx_StdPeriph_Driver      # ST标准外设库
 ├── MDK-ARM/                            # MDK 工程文件
 ├── user/                               # 用户文件
-│   ├── app                               === 应用层文件 ===
-│   │   ├── config                              # 用户配置
-│   │   │   ├── bl_config.h                         # sloop 配置文件
-│   │   │   ├── com_config.h                        # 串口和can 配置文件
-│   │   │   ├── gpio_config.c                       # GPIO 配置文件
-│   │   │   ├── gpio_config.h                       # GPIO 对外API和别名
-│   │   │   └── stm32f2xx_conf.h                    # ST 外设库配置（不要变更）
-│   │   ├── module                              # 整机功能模块，比如伺服电机、编码器
-│   │   ├── tasks                               # 任务存放文件夹
-│   │   │   ├── task_baseInit.c                     # 原始任务
-│   │   │   ├── task_demo.c                         # 演示任务
-│   │   │   └── task_idle.c                         # 空闲任务
-│   │   ├── common.h                            # 应用层公共包含
-│   │   ├── main.c                              # 程序入口 main，在此弱定义任务
-│   │   └── main.h                              # 在此声明任务
-│   ├── sloop                          === sloop 源码（不要变更）===
-│   │   ├── kernel                              # 内核
-│   │   │   ├── sloop.c                          # sloop 内核源代码
-│   │   │   ├── behavior_log.h                      # 行为日志宏
-│   │   │   └── console.c                           # 控制台源代码
-│   │   ├── mcu_interface                   # BL移植时，MCU 接口代码
-│   │   │   ├── stm32f2xx_it.c                      # mcu 中断头文件（不要变更）
-│   │   │   └── stm32f2xx_it.h                      # mcu 中断源文件（不要变更）建议在驱动中实现 RQHandler，不需要汇总到这里
-│   │   ├── RTT                             # 日志支持模块，SEGGER RTT
-│   │   ├── sloop.h                      # sloop 用户 API
-│   │   └── bl_common.h                     # sloop 用户 宏 API，主要是日志
-│   ├── service                           === 为应用层提供服务（不要变更）===
-│   │   ├── app_service_pack                    # 面向应用层的服务包，与 MCU 无关，完全可移植
-│   │   ├── mcu_service_pack                    # 基于MCU的服务包，完全依赖 MCU，对其他MCU平台不可移植
-│   │   └── service_api.h                       # 服务包面向应用层，提供给用户的API
+│   ├── app                             === 应用层文件 ===
+│   │   ├── config                      # 用户配置
+│   │   │   ├── bl_config.h             # sloop 配置文件
+│   │   │   ├── com_config.h            # 串口和can 配置文件
+│   │   │   ├── gpio_config.c           # GPIO 配置文件
+│   │   │   ├── gpio_config.h           # GPIO 对外API和别名
+│   │   │   └── stm32f2xx_conf.h        # ST 外设库配置（不要变更）
+│   │   ├── module                      # 整机功能模块，比如伺服电机、编码器
+│   │   ├── tasks                       # 任务存放文件夹
+│   │   │   ├── task_baseInit.c         # 原始任务
+│   │   │   ├── task_demo.c             # 演示任务
+│   │   │   └── task_idle.c             # 空闲任务
+│   │   ├── common.h                    # 应用层公共包含
+│   │   ├── main.c                      # 程序入口 main，在此弱定义任务
+│   │   └── main.h                      # 在此声明任务
+│   ├── sloop                           === sloop 源码（不要变更）===
+│   │   ├── kernel                      # 内核
+│   │   │   ├── sloop.c                 # sloop 内核源代码
+│   │   │   ├── behavior_log.h          # 行为日志宏
+│   │   │   └── console.c               # 控制台源代码
+│   │   ├── mcu_interface               # BL移植时，MCU 接口代码
+│   │   │   ├── mcu_base_timer.c        # mcu 基础定时器源文件
+│   │   │   ├── mcu_base_timer.h        # mcu 基础定时器头文件
+│   │   │   ├── stm32f2xx_it.c          # mcu 中断源文件（不要变更）
+│   │   │   └── stm32f2xx_it.h          # mcu 中断头文件（不要变更）建议在驱动中实现 RQHandler，不需要汇总到这里
+│   │   ├── RTT                         # 日志支持模块，SEGGER RTT
+│   │   ├── sloop.h                     # sloop 用户 API
+│   │   └── bl_common.h                 # sloop 用户 宏 API，主要是日志
+│   ├── service                         === 为应用层提供服务（不要变更）===
+│   │   ├── app_service_pack            # 面向应用层的服务包，与 MCU 无关，完全可移植
+│   │   ├── mcu_service_pack            # 基于MCU的服务包，对其他MCU平台不可移植
+│   │   └── service_api.h               # 服务包面向应用层，提供给用户的API
 └── readme.md                           # 项目说明文档 和 更新日志
 
 =====================================================================================
@@ -160,15 +169,15 @@ input->"echo input"->all enable
 
 #控制台内置命令汇总
 
-    功能                命令        简写        数字调用        参数
-c1:  重启                reboot      r/R          0             无
-c2:  查询版本            version     v/V          1             无
-c3:  查询当前任务数据     task        t/T         2              命令示例："task" 打印一次，"task on" 10Hz打印，"task off" 关闭10Hz打印
-c4:  查询 cpu 负载       cpu        c/C          3             命令示例："cpu" 打印一次，"cpu on" 10Hz打印，"cpu off" 关闭10Hz打印
-c5:  串口发送            uart       无           无            命令示例：ASCLL 模式："uart6 hello"，HEX 模式："uart6 -hex 68 65 6C 6C 6F"
-c6:  CAN发送             can        无           无             命令示例：ASCLL 模式："can1 -id 1 hello"，HEX 模式："can1 -id 1 -hex 68 65 6C 6C 6F"
-c7:  GPIO输出 
-和 gpio输入回显开关       gpio        无           无             命令示例：命令示例："gpio pin_beep H", "gpio input on" or "gpio input off"
+| 功能                  | 命令       | 简写 | 数字调用 | 参数                              
+|-----------------------|-----------|------|---------|-----------------------------------
+| 重启                  | reboot     | r/R  | 0      | 无                                
+| 查询版本              | version    | v/V  | 1      | 无                                
+| 查询当前任务数据       | task       | t/T  | 2      | 命令示例："task" 打印一次，"task on" 10Hz打印，"task off" 关闭10Hz打印 
+| 查询 cpu 负载         | cpu        | c/C  | 3      | 命令示例："cpu" 打印一次，"cpu on" 10Hz打印，"cpu off" 关闭10Hz打印 
+| 串口发送              | uart       | 无   | 无     | 命令示例：ASCLL 模式："uart6 hello"，HEX 模式："uart6 -hex 68 65 6C 6C 6F" 
+| CAN发送               | can        | 无   | 无     | 命令示例：ASCLL 模式："can1 -id 1 hello"，HEX 模式："can1 -id 1 -hex 68 65 6C 6C 6F" 
+| GPIO输出和输入回显开关 | gpio       | 无   | 无     | 命令示例："gpio pin_beep H", "gpio input on" or "gpio input off" 
 
 命令 -h: 可查看命令使用举例，比如 uart -h
 
@@ -213,7 +222,7 @@ if(sys_wait(10))
             中断优先级分配表
 SysTick_IRQn                    PRIO_HIGHEST 0
 外设中断                         PRIO_DEFAULT 5
-sloop 基础定时器              PRIO_LOWEST 15
+sloop 基础定时器                 PRIO_LOWEST 15
 main 主线程                      16（相当于）
 
 13.新增互斥任务需要在 main.h 声明，在 main.c 中弱定义，在用户创建的 task 文件中实现。
