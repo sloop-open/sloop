@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
  * @file    asp_can_send
- * @author  暄暄
+ * @author  sloop
  * @date    2025-1-15
  * @brief   can 带FIFO的发送驱动
  * ==此文件用户不应变更==
@@ -27,7 +27,7 @@ void asp_can_send_init(void)
 {
     asp_fifo_init();
 
-    sys_task_start(fifo_dequeue);
+    sl_task_start(fifo_dequeue);
 }
 
 /* 带FIFO的can 发送 */
@@ -58,7 +58,7 @@ static void fifo_dequeue(void)
     if (!asp_fifo_isEmpty())
     {
         /* 与上次发送间隔时间 */
-        if ((sys_get_tick() - tx_cplt_tick) > TX_INTERVAL)
+        if ((sl_get_tick() - tx_cplt_tick) > TX_INTERVAL)
         {
             /* 启动发送链 */
             can_send_dequeue();
@@ -80,12 +80,12 @@ static void can_send_dequeue(void)
     /* 启动发送 */
     msp_can_tx(&msg);
 
-    tx_cplt_tick = sys_get_tick();
+    tx_cplt_tick = sl_get_tick();
 
     if (asp_fifo_isEmpty())
         return;
 
-    sys_timeout_start(TX_INTERVAL, can_send_dequeue);
+    sl_timeout_start(TX_INTERVAL, can_send_dequeue);
 }
 
 /************************** END OF FILE **************************/

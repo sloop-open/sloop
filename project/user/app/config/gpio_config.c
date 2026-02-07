@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
  * @file    gpio_config
- * @author  暄暄
+ * @author  sloop
  * @date    2025-2-27
  * @brief   GPIO 配置
  * ==用户可在此文件上集中配置GPIO==
@@ -185,7 +185,7 @@ void gpio_config(void)
     /* 运行指示灯 */
     gpio_out_cfg(runLed, GPIO_OType_OD, GPIO_Speed_2MHz, GPIO_PuPd_NOPULL, L);
 
-    sys_prt_withFunc("gpio config ok");
+    sl_prt_withFunc("gpio config ok");
 }
 
 #define _gpio_map(name) {"pin_" #name, pin_##name}
@@ -235,7 +235,7 @@ void gpio_input_echo(void)
     {
         if ((trig >> i) & 0x01)
         {
-            sys_prt_withFunc("input trigger: %s, level: %c", gpio_map[i].str, (input >> i) & 0x01 ? 'H' : 'L');
+            sl_prt_withFunc("input trigger: %s, level: %c", gpio_map[i].str, (input >> i) & 0x01 ? 'H' : 'L');
         }
     }
 }

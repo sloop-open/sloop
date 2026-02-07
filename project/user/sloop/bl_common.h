@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
  * @file    bl_common
- * @author  xuan
+ * @author  sloop
  * @date    2024-12-24
  * @brief   杂项包含
  * ==此文件用户不应变更==
@@ -57,9 +57,9 @@ typedef void (*pfunc)(void);
 /* ============================================================== */
 /* 打印 API */
 
-uint32_t sys_get_tick(void);
+uint32_t sl_get_tick(void);
 
-#if !SYS_RTT_ENABLE
+#if !SL_RTT_ENABLE
 
 void print_null(const char *sFormat, ...);
 
@@ -68,40 +68,40 @@ void print_null(const char *sFormat, ...);
 #endif
 
 /* 系统打印（带时间戳），RTT 简化版本 */
-#define sys_printf(sFormat, ...) SEGGER_RTT_printf(0, RTT_CTRL_TEXT_GREEN "\n[%02d %02d:%02d:%02d.%03d] " RTT_CTRL_TEXT_YELLOW sFormat "\n" RTT_CTRL_RESET, \
-                                                   sys_get_tick() / 1000 / 60 / 60 / 24,                                                                    \
-                                                   sys_get_tick() / 1000 / 60 / 60 % 24,                                                                    \
-                                                   sys_get_tick() / 1000 / 60 % 60,                                                                         \
-                                                   sys_get_tick() / 1000 % 60,                                                                              \
-                                                   sys_get_tick() % 1000,                                                                                   \
+#define sl_printf(sFormat, ...) SEGGER_RTT_printf(0, RTT_CTRL_TEXT_GREEN "\n[%02d %02d:%02d:%02d.%03d] " RTT_CTRL_TEXT_YELLOW sFormat "\n" RTT_CTRL_RESET, \
+                                                   sl_get_tick() / 1000 / 60 / 60 / 24,                                                                    \
+                                                   sl_get_tick() / 1000 / 60 / 60 % 24,                                                                    \
+                                                   sl_get_tick() / 1000 / 60 % 60,                                                                         \
+                                                   sl_get_tick() / 1000 % 60,                                                                              \
+                                                   sl_get_tick() % 1000,                                                                                   \
                                                    ##__VA_ARGS__, __func__)
 
 /* 带函数名的打印 */
-#define sys_prt_withFunc(sFormat, ...) sys_printf(sFormat RTT_CTRL_TEXT_GREEN " <func: %s>" RTT_CTRL_RESET, ##__VA_ARGS__, __func__)
+#define sl_prt_withFunc(sFormat, ...) sl_printf(sFormat RTT_CTRL_TEXT_GREEN " <func: %s>" RTT_CTRL_RESET, ##__VA_ARGS__, __func__)
 
 /* 错误日志 */
-#define sys_error(sFormat, ...) sys_prt_withFunc(RTT_CTRL_TEXT_BRIGHT_RED "[error] " sFormat RTT_CTRL_RESET, ##__VA_ARGS__)
+#define sl_error(sFormat, ...) sl_prt_withFunc(RTT_CTRL_TEXT_BRIGHT_RED "[error] " sFormat RTT_CTRL_RESET, ##__VA_ARGS__)
 
 /* 白色高亮日志，带 === ==== */
-#define sys_focus(sFormat, ...) sys_printf(RTT_CTRL_TEXT_BRIGHT_WHITE "=== " sFormat " ===" RTT_CTRL_RESET, ##__VA_ARGS__)
+#define sl_focus(sFormat, ...) sl_printf(RTT_CTRL_TEXT_BRIGHT_WHITE "=== " sFormat " ===" RTT_CTRL_RESET, ##__VA_ARGS__)
 
 /* 白色高亮日志 */
-#define sys_prt_brWhite(sFormat, ...) sys_printf(RTT_CTRL_TEXT_BRIGHT_WHITE sFormat RTT_CTRL_RESET, ##__VA_ARGS__)
+#define sl_prt_brWhite(sFormat, ...) sl_printf(RTT_CTRL_TEXT_BRIGHT_WHITE sFormat RTT_CTRL_RESET, ##__VA_ARGS__)
 
 /* 黄色高亮日志 */
-#define sys_prt_brYellow(sFormat, ...) sys_printf(RTT_CTRL_TEXT_BRIGHT_YELLOW sFormat RTT_CTRL_RESET, ##__VA_ARGS__)
+#define sl_prt_brYellow(sFormat, ...) sl_printf(RTT_CTRL_TEXT_BRIGHT_YELLOW sFormat RTT_CTRL_RESET, ##__VA_ARGS__)
 
 /* 打印变量 */
-#define sys_prt_var(var) sys_prt_withFunc(#var " = %d", (int)var)
+#define sl_prt_var(var) sl_prt_withFunc(#var " = %d", (int)var)
 
 /* 打印字符串 */
-#define sys_prt_str(str) sys_prt_withFunc("%s", str)
+#define sl_prt_str(str) sl_prt_withFunc("%s", str)
 
 /* 打印浮点数 */
-#define sys_prt_float(var) sys_prt_withFunc(#var " = %d.%2d", (int)var, (int)(var * 1000) % 1000)
+#define sl_prt_float(var) sl_prt_withFunc(#var " = %d.%2d", (int)var, (int)(var * 1000) % 1000)
 
 /* 连续打印（末尾不带换行），用于不换行连续输出 */
-#define sys_prt_noNewLine(sFormat, ...) SEGGER_RTT_printf(0, RTT_CTRL_TEXT_YELLOW sFormat RTT_CTRL_RESET, ##__VA_ARGS__, __func__)
+#define sl_prt_noNewLine(sFormat, ...) SEGGER_RTT_printf(0, RTT_CTRL_TEXT_YELLOW sFormat RTT_CTRL_RESET, ##__VA_ARGS__, __func__)
 
 /* ============================================================== */
 /* 互斥任务相关服务 */
@@ -110,13 +110,13 @@ extern char _init;
 extern char _free;
 
 /* 加载新任务 */
-void sys_load_new_task(void);
+void sl_load_new_task(void);
 
 /* 任务初始化宏 */
 #define _INIT                            \
     if (_init == 1)                      \
     {                                    \
-        sys_focus("enter %s", __func__); \
+        sl_focus("enter %s", __func__); \
         _init = 0;
 
 /* 任务释放宏 */
@@ -126,8 +126,8 @@ void sys_load_new_task(void);
     {
 
 #define _RUN                        \
-    sys_focus("exit %s", __func__); \
-    sys_load_new_task();            \
+    sl_focus("exit %s", __func__); \
+    sl_load_new_task();            \
     _init = 1;                      \
     _free = 0;                      \
     return;                         \

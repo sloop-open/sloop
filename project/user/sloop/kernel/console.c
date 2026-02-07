@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
  * @file    console
- * @author  xuan
+ * @author  sloop
  * @date    2025-1-21
  * @brief   系统控制台
  * ==此文件用户不应变更==
@@ -9,17 +9,17 @@
 
 #include "common.h"
 
-#if !SYS_RTT_ENABLE
+#if !SL_RTT_ENABLE
 
 #undef BHV_LOG_ENABLE
-#undef SYS_CMD_ENABLE
+#undef SL_CMD_ENABLE
 
 #define BHV_LOG_ENABLE 0
-#define SYS_CMD_ENABLE 0
+#define SL_CMD_ENABLE 0
 
 #endif
 
-#if SYS_CMD_ENABLE
+#if SL_CMD_ENABLE
 
 /* cpu 打印 */
 void cpu_print(void);
@@ -41,7 +41,7 @@ void cmd_can(void);
 void cmd_gpio(void);
 
 /* 控制台命令字符上限 */
-#define BUFFER_SIZE SYS_CMD_SIZE
+#define BUFFER_SIZE SL_CMD_SIZE
 /* 命令头字符上限 */
 #define HEAD_SIZE 16
 
@@ -55,10 +55,10 @@ typedef struct
 
     pfunc callback;
 
-} sys_cmd_typ;
+} sl_cmd_typ;
 
 /* 系统命令注册表 */
-sys_cmd_typ sys_cmd_reg[SYS_CMD_LIMIT] = {
+sl_cmd_typ sl_cmd_reg[SL_CMD_LIMIT] = {
 
     {"reboot", cmd_reboot},
     {"version", cmd_version},
@@ -71,63 +71,63 @@ sys_cmd_typ sys_cmd_reg[SYS_CMD_LIMIT] = {
 };
 
 /* 实际命令数量 */
-static int cmd_num = sizeof sys_cmd_reg / sizeof sys_cmd_reg[0];
+static int cmd_num = sizeof sl_cmd_reg / sizeof sl_cmd_reg[0];
 
 /* 添加控制台命令 */
-void sys_add_cmd(char *str, pfunc task)
+void sl_add_cmd(char *str, pfunc task)
 {
     if (task == NULL)
     {
-        sys_error("The task is null");
+        sl_error("The task is null");
 
         return;
     }
 
     if (strlen(str) > HEAD_SIZE)
     {
-        sys_error("The cmd is too long, more than %2d", HEAD_SIZE);
-        sys_error("The cmd: %s", str);
+        sl_error("The cmd is too long, more than %2d", HEAD_SIZE);
+        sl_error("The cmd: %s", str);
     }
 
-    for (int i = 0; i < SYS_CMD_LIMIT; i++)
+    for (int i = 0; i < SL_CMD_LIMIT; i++)
     {
         if (str[0] == '\0')
         {
-            sys_error("The command string cannot be empty");
+            sl_error("The command string cannot be empty");
 
             return;
         }
 
-        if (sys_cmd_reg[i].callback == task)
+        if (sl_cmd_reg[i].callback == task)
         {
-            sys_error("this command has already been registered");
+            sl_error("this command has already been registered");
 
             return;
         }
     }
 
     /* 如未注册，在这里注册 */
-    for (int i = 0; i < SYS_CMD_LIMIT; i++)
+    for (int i = 0; i < SL_CMD_LIMIT; i++)
     {
-        if (sys_cmd_reg[i].callback == NULL)
+        if (sl_cmd_reg[i].callback == NULL)
         {
-            strncpy(sys_cmd_reg[i].str, str, HEAD_SIZE);
+            strncpy(sl_cmd_reg[i].str, str, HEAD_SIZE);
 
-            sys_cmd_reg[i].callback = task;
+            sl_cmd_reg[i].callback = task;
 
             cmd_num++;
 
-            sys_printf("system cmd added: %s", str);
+            sl_printf("system cmd added: %s", str);
 
             return;
         }
     }
 
-    sys_error("system cmd overflow, limit %2d", SYS_CMD_LIMIT);
+    sl_error("system cmd overflow, limit %2d", SL_CMD_LIMIT);
 }
 
 /* 获取控制台输入字符串。可用于获取命令参数，推荐用 sscanf */
-char *sys_get_cmd_str(void)
+char *sl_get_cmd_str(void)
 {
     return str_buff;
 }
@@ -148,7 +148,7 @@ void system_console(void)
 
     if (RTT_buff[BUFFER_SIZE - 2] != 0)
     {
-        sys_error("Input more than %d characters", BUFFER_SIZE);
+        sl_error("Input more than %d characters", BUFFER_SIZE);
     }
 
     /* 清除缓存 */
@@ -164,16 +164,16 @@ void system_console(void)
     /* 解析命令 */
     for (int i = 0; i < cmd_num; i++)
     {
-        if (sys_cmd_reg[i].str[0] == '\0')
+        if (sl_cmd_reg[i].str[0] == '\0')
             continue;
 
         /* 匹配并且出现在字符串头部 */
-        if (strncmp(buff, sys_cmd_reg[i].str, strlen(sys_cmd_reg[i].str)) == 0)
+        if (strncmp(buff, sl_cmd_reg[i].str, strlen(sl_cmd_reg[i].str)) == 0)
         {
-            sys_printf("cmd%d <%s> will be executed", i, sys_cmd_reg[i].str);
+            sl_printf("cmd%d <%s> will be executed", i, sl_cmd_reg[i].str);
 
-            if (sys_cmd_reg[i].callback != NULL)
-                sys_cmd_reg[i].callback();
+            if (sl_cmd_reg[i].callback != NULL)
+                sl_cmd_reg[i].callback();
 
             return;
         }
@@ -183,7 +183,7 @@ void system_console(void)
     if (strlen(buff) != 1)
     {
         /* 无效命令 */
-        sys_error("Invalid command");
+        sl_error("Invalid command");
 
         return;
     }
@@ -198,13 +198,13 @@ void system_console(void)
     case 'm':
     case 'M':
     {
-        sys_focus("cmd menu");
+        sl_focus("cmd menu");
 
-        for (int i = 0; i < SYS_CMD_LIMIT; i++)
+        for (int i = 0; i < SL_CMD_LIMIT; i++)
         {
-            if (sys_cmd_reg[i].callback != NULL)
+            if (sl_cmd_reg[i].callback != NULL)
             {
-                sys_prt_brYellow("%d: %s", i, sys_cmd_reg[i].str);
+                sl_prt_brYellow("%d: %s", i, sl_cmd_reg[i].str);
             }
             else
             {
@@ -246,20 +246,20 @@ void system_console(void)
     {
         if (index < '0')
         {
-            sys_error("Invalid command");
+            sl_error("Invalid command");
 
             return;
         }
 
         index -= '0';
 
-        if (index < SYS_CMD_LIMIT)
+        if (index < SL_CMD_LIMIT)
         {
-            if (sys_cmd_reg[index].callback != NULL)
+            if (sl_cmd_reg[index].callback != NULL)
             {
-                sys_printf("cmd%d <%s> will be executed", index, sys_cmd_reg[index].str);
+                sl_printf("cmd%d <%s> will be executed", index, sl_cmd_reg[index].str);
 
-                sys_cmd_reg[index].callback();
+                sl_cmd_reg[index].callback();
 
                 return;
             }
@@ -268,7 +268,7 @@ void system_console(void)
     break;
     }
 
-    sys_error("Invalid command");
+    sl_error("Invalid command");
 }
 
 /* ============================================================== */
@@ -276,7 +276,7 @@ void system_console(void)
 /* 系统复位 */
 void cmd_reboot(void)
 {
-    sys_timeout_start(10, NVIC_SystemReset);
+    sl_timeout_start(10, NVIC_SystemReset);
 }
 
 /* 版本号长度 */
@@ -287,25 +287,25 @@ static char version[VER_LEN + 1];
 /* 查询版本 */
 void cmd_version(void)
 {
-    sys_prt_brYellow("Version: %s, Build Date: %s, %s", version, __DATE__, __TIME__);
+    sl_prt_brYellow("Version: %s, Build Date: %s, %s", version, __DATE__, __TIME__);
 }
 
 /* 设置程序版本 */
-void sys_set_version(char *str)
+void sl_set_version(char *str)
 {
     if (strlen(str) > VER_LEN)
     {
-        sys_error("The version is too long, more than %2d", VER_LEN);
-        sys_error("The version: %s", str);
+        sl_error("The version is too long, more than %2d", VER_LEN);
+        sl_error("The version: %s", str);
     }
 
     strncpy(version, str, VER_LEN);
 
-    sys_prt_brYellow("version: %s", str);
+    sl_prt_brYellow("version: %s", str);
 }
 
 /* 查询程序版本 */
-char *sys_get_version(void)
+char *sl_get_version(void)
 {
     return version;
 }
@@ -317,7 +317,7 @@ void cmd_task(void)
 {
 #if BHV_LOG_ENABLE
 
-    char *str = sys_get_cmd_str();
+    char *str = sl_get_cmd_str();
 
     str = str_next(str);
 
@@ -330,20 +330,20 @@ void cmd_task(void)
 
     if (strcmp(str, "on") == 0)
     {
-        sys_cycle_start(100, task_print);
+        sl_cycle_start(100, task_print);
     }
     else if (strcmp(str, "off") == 0)
     {
-        sys_cycle_stop(task_print);
+        sl_cycle_stop(task_print);
     }
     else if (strcmp(str, "-h") == 0)
     {
-        sys_prt_brYellow("e.g. \"task\", \"task on\" or \"task off\"");
+        sl_prt_brYellow("e.g. \"task\", \"task on\" or \"task off\"");
     }
 
 #else
 
-    sys_error("Enable behavior log to activate task commands");
+    sl_error("Enable behavior log to activate task commands");
 
 #endif
 }
@@ -353,7 +353,7 @@ void cmd_task(void)
 /* 查询 cpu 负载 */
 void cmd_cpu(void)
 {
-    char *str = sys_get_cmd_str();
+    char *str = sl_get_cmd_str();
 
     str = str_next(str);
 
@@ -366,15 +366,15 @@ void cmd_cpu(void)
 
     if (strcmp(str, "on") == 0)
     {
-        sys_cycle_start(100, cpu_print);
+        sl_cycle_start(100, cpu_print);
     }
     else if (strcmp(str, "off") == 0)
     {
-        sys_cycle_stop(cpu_print);
+        sl_cycle_stop(cpu_print);
     }
     else if (strcmp(str, "-h") == 0)
     {
-        sys_prt_brYellow("e.g. \"cpu\", \"cpu on\" or \"cpu off\"");
+        sl_prt_brYellow("e.g. \"cpu\", \"cpu on\" or \"cpu off\"");
     }
 }
 
@@ -388,7 +388,7 @@ ASCLL 模式： uart6 hello
 HEX 模式： uart6 -hex 68 65 6C 6C 6F */
 void cmd_uart(void)
 {
-    char *str = sys_get_cmd_str();
+    char *str = sl_get_cmd_str();
 
     int id = 0;
 
@@ -400,7 +400,7 @@ void cmd_uart(void)
     {
         if (strcmp(str, "-h") == 0)
         {
-            sys_prt_brYellow("e.g. \"uart6 hello\" or \"uart6 -hex 68 65 6C 6C 6F\"");
+            sl_prt_brYellow("e.g. \"uart6 hello\" or \"uart6 -hex 68 65 6C 6C 6F\"");
 
             return;
         }
@@ -409,16 +409,16 @@ void cmd_uart(void)
     /* 获取 串口号 */
     if (sscanf(strtok(_str, " "), "uart%d", &id) != 1)
     {
-        sys_error("Please specify the valid serial port");
+        sl_error("Please specify the valid serial port");
 
-        sys_error("e.g. \"uart6 hello\" or \"uart6 -hex 68 65 6C 6C 6F\"");
+        sl_error("e.g. \"uart6 hello\" or \"uart6 -hex 68 65 6C 6C 6F\"");
 
         return;
     }
 
     if (str == NULL)
     {
-        sys_error("The content sent cannot be empty");
+        sl_error("The content sent cannot be empty");
 
         return;
     }
@@ -453,7 +453,7 @@ void cmd_uart(void)
             break;
 
         default:
-            sys_error("serial port %d has not been registered", id);
+            sl_error("serial port %d has not been registered", id);
             break;
         }
 
@@ -466,7 +466,7 @@ void cmd_uart(void)
 
     if (str == NULL)
     {
-        sys_error("The content sent cannot be empty");
+        sl_error("The content sent cannot be empty");
 
         return;
     }
@@ -510,7 +510,7 @@ void cmd_uart(void)
         break;
 
     default:
-        sys_error("serial port %d has not been registered", id);
+        sl_error("serial port %d has not been registered", id);
         break;
     }
 }
@@ -524,7 +524,7 @@ void cmd_can(void)
 {
     CanTxMsg msg = {0};
 
-    char *str = sys_get_cmd_str();
+    char *str = sl_get_cmd_str();
 
     int _id = 0;
     int id = 0;
@@ -537,7 +537,7 @@ void cmd_can(void)
     {
         if (strcmp(str, "-h") == 0)
         {
-            sys_prt_brYellow("e.g. \"can1 -id 1 hello\" or \"can1 -id 1 -hex 68 65 6C 6C 6F\"");
+            sl_prt_brYellow("e.g. \"can1 -id 1 hello\" or \"can1 -id 1 -hex 68 65 6C 6C 6F\"");
 
             return;
         }
@@ -545,9 +545,9 @@ void cmd_can(void)
 
     if (sscanf(strtok(_str, " "), "can%d", &_id) != 1)
     {
-        sys_error("Please specify can1 or can2.");
+        sl_error("Please specify can1 or can2.");
 
-        sys_error("e.g. \"can1 -id 1 hello\" or \"can1 -id 1 -hex 68 65 6C 6C 6F\"");
+        sl_error("e.g. \"can1 -id 1 hello\" or \"can1 -id 1 -hex 68 65 6C 6C 6F\"");
 
         return;
     }
@@ -555,9 +555,9 @@ void cmd_can(void)
     /* can1 或 can2 */
     if (!((_id == 1) || (_id == 2)))
     {
-        sys_error("Please specify can1 or can2.");
+        sl_error("Please specify can1 or can2.");
 
-        sys_error("e.g. \"can1 -id 1 hello\" or \"can1 -id 1 -hex 68 65 6C 6C 6F\"");
+        sl_error("e.g. \"can1 -id 1 hello\" or \"can1 -id 1 -hex 68 65 6C 6C 6F\"");
 
         return;
     }
@@ -565,9 +565,9 @@ void cmd_can(void)
     /* 获取 can id */
     if (sscanf(str, "-id %d", &id) != 1)
     {
-        sys_error("Please specify a valid id.");
+        sl_error("Please specify a valid id.");
 
-        sys_error("e.g. \"can1 -id 1 hello\" or \"can1 -id 1 -hex 68 65 6C 6C 6F\"");
+        sl_error("e.g. \"can1 -id 1 hello\" or \"can1 -id 1 -hex 68 65 6C 6C 6F\"");
 
         return;
     }
@@ -577,7 +577,7 @@ void cmd_can(void)
 
     if (str == NULL)
     {
-        sys_error("The content sent cannot be empty");
+        sl_error("The content sent cannot be empty");
 
         return;
     }
@@ -589,13 +589,13 @@ void cmd_can(void)
 
         if (len > 8)
         {
-            sys_error("can tx len over 8, reach %2d", len);
+            sl_error("can tx len over 8, reach %2d", len);
 
             len = 8;
         }
         else if (len == 0)
         {
-            sys_error("Send length is 0");
+            sl_error("Send length is 0");
 
             return;
         }
@@ -621,7 +621,7 @@ void cmd_can(void)
 
     if (str == NULL)
     {
-        sys_error("The content sent cannot be empty");
+        sl_error("The content sent cannot be empty");
 
         return;
     }
@@ -642,13 +642,13 @@ void cmd_can(void)
 
     if (len > 8)
     {
-        sys_error("can tx len over 8, reach %2d", len);
+        sl_error("can tx len over 8, reach %2d", len);
 
         len = 8;
     }
     else if (len == 0)
     {
-        sys_error("Send length is 0");
+        sl_error("Send length is 0");
 
         return;
     }
@@ -666,25 +666,25 @@ void cmd_can(void)
         asp_can2_send(&msg);
 }
 
-#else /* SYS_CMD_ENABLE */
+#else /* SL_CMD_ENABLE */
 
 /* 弱定义，防止 RTT 关闭时，编译报错 */
 
-void sys_add_cmd(char *str, pfunc task) {}
+void sl_add_cmd(char *str, pfunc task) {}
 
-char *sys_get_cmd_str(void)
+char *sl_get_cmd_str(void)
 {
     return NULL;
 }
 
-void sys_set_version(char *str) {}
+void sl_set_version(char *str) {}
 
-char *sys_get_version(void)
+char *sl_get_version(void)
 {
     return NULL;
 }
 
-#endif /* SYS_CMD_ENABLE */
+#endif /* SL_CMD_ENABLE */
 
 /* 按空格索引下一个字符串 */
 char *str_next(char *str)
@@ -709,36 +709,36 @@ char *str_next(char *str)
 /* gpio 输出 */
 void cmd_gpio(void)
 {
-    char *str = sys_get_cmd_str();
+    char *str = sl_get_cmd_str();
 
     str = str_next(str);
 
     if (str == NULL)
     {
-        sys_error("e.g. \"gpio pin_beep H\", \"gpio input on\" or \"gpio input off\"");
+        sl_error("e.g. \"gpio pin_beep H\", \"gpio input on\" or \"gpio input off\"");
 
         return;
     }
 
     if (strcmp(str, "-h") == 0)
     {
-        sys_prt_brYellow("e.g. \"gpio pin_beep H\", \"gpio input on\" or \"gpio input off\"");
+        sl_prt_brYellow("e.g. \"gpio pin_beep H\", \"gpio input on\" or \"gpio input off\"");
 
         return;
     }
     else if (strcmp(str, "input on") == 0)
     {
         /* 开启 GPIO 输入回显 */
-        sys_cycle_start(10, gpio_input_echo);
+        sl_cycle_start(10, gpio_input_echo);
 
-        sys_prt_withFunc("gpio input echo on");
+        sl_prt_withFunc("gpio input echo on");
     }
     else if (strcmp(str, "input off") == 0)
     {
         /* 关闭 GPIO 输入回显 */
-        sys_cycle_stop(gpio_input_echo);
+        sl_cycle_stop(gpio_input_echo);
 
-        sys_prt_withFunc("gpio input echo off");
+        sl_prt_withFunc("gpio input echo off");
     }
 
     /* 解析命令 */
@@ -751,7 +751,7 @@ void cmd_gpio(void)
 
             gpio_write(gpio_map[i]._enum, str[0] == 'H' ? H : L);
 
-            sys_printf("pin_beep");
+            sl_printf("pin_beep");
 
             return;
         }

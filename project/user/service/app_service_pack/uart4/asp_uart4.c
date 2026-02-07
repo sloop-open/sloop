@@ -1,7 +1,7 @@
 /**
 ******************************************************************************
 * @file    asp_uart4
-* @author  暄暄
+* @author  sloop
 * @date    2025-1-16
 * @brief   提供串口接收发送驱动及服务，收发都是 DMA+FIFO
 ==此文件用户不应变更==
@@ -24,7 +24,7 @@ void asp_uart4_init(void)
     /* 串口接收初始化 */
     asp_uart_receive_init();
 
-    sys_prt_withFunc("init: uart4");
+    sl_prt_withFunc("init: uart4");
 }
 
 /*********************************** END OF FILE ***********************************/

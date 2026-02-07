@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
  * @file    msp_can
- * @author  暄暄
+ * @author  sloop
  * @date    2024-10-21
  * @brief   can 总线驱动
  * ==此文件用户不应变更==
@@ -79,7 +79,7 @@ void CANx_IRQHandler(void)
 {
     CAN_Receive(CANx, CANx_FIFONumber, &RxMessage);
 
-    sys_task_once(can_rx_process);
+    sl_task_once(can_rx_process);
 }
 
 /* 接收回调 */
@@ -100,18 +100,18 @@ void can_rx_process(void)
 
     count++;
 
-    sys_prt_var(count);
+    sl_prt_var(count);
 
     memcpy(buff, RxMessage.Data, len);
 
-    sys_prt_noNewLine(RTT_CTRL_TEXT_BRIGHT_YELLOW "\ncan rx len: %d, rx id: %d, data: ", len, id);
+    sl_prt_noNewLine(RTT_CTRL_TEXT_BRIGHT_YELLOW "\ncan rx len: %d, rx id: %d, data: ", len, id);
 
     for (int i = 0; i < len; i++)
-        sys_prt_noNewLine(RTT_CTRL_TEXT_BRIGHT_YELLOW "%02x ", buff[i]);
+        sl_prt_noNewLine(RTT_CTRL_TEXT_BRIGHT_YELLOW "%02x ", buff[i]);
 
-    sys_prt_noNewLine("\n");
+    sl_prt_noNewLine("\n");
 
-    sys_prt_withFunc(RTT_CTRL_TEXT_BRIGHT_YELLOW "can rx: %s", buff);
+    sl_prt_withFunc(RTT_CTRL_TEXT_BRIGHT_YELLOW "can rx: %s", buff);
 
 #endif
 
@@ -135,18 +135,18 @@ void msp_can_tx(CanTxMsg *msg)
 
     count++;
 
-    sys_prt_var(count);
+    sl_prt_var(count);
 
     memcpy(buff, TxMessage.Data, len);
 
-    sys_prt_noNewLine(RTT_CTRL_TEXT_BRIGHT_WHITE "\ncan tx len: %d, tx id: %d, data: ", len, id);
+    sl_prt_noNewLine(RTT_CTRL_TEXT_BRIGHT_WHITE "\ncan tx len: %d, tx id: %d, data: ", len, id);
 
     for (int i = 0; i < len; i++)
-        sys_prt_noNewLine(RTT_CTRL_TEXT_BRIGHT_WHITE "%02x ", buff[i]);
+        sl_prt_noNewLine(RTT_CTRL_TEXT_BRIGHT_WHITE "%02x ", buff[i]);
 
-    sys_prt_noNewLine("\n");
+    sl_prt_noNewLine("\n");
 
-    sys_prt_withFunc(RTT_CTRL_TEXT_BRIGHT_WHITE "can tx: %s", buff);
+    sl_prt_withFunc(RTT_CTRL_TEXT_BRIGHT_WHITE "can tx: %s", buff);
 
 #endif
 

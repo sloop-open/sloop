@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
  * @file    asp_uart_receive
- * @author  暄暄
+ * @author  sloop
  * @date    2025-1-15
  * @brief   串口带FIFO的接收驱动
  * ==此文件用户不应变更==
@@ -19,7 +19,7 @@ void asp_uart_receive_init(void)
 {
     asp_fifo_init();
 
-    sys_task_start(fifo_dequeue);
+    sl_task_start(fifo_dequeue);
 }
 
 /* FIFO出队 */
@@ -42,7 +42,7 @@ void msp_uart_rx_callback(uint8_t *data, int len)
 {
     if (len == 0)
     {
-        sys_error("Receive length is 0");
+        sl_error("Receive length is 0");
 
         return;
     }
@@ -58,14 +58,14 @@ __weak void asp_uart_receive_callback(uint8_t *data, int len)
     else
         data[len - 1] = 0;
 
-    sys_printf("uart fifo rx, len: %d, data: ", len);
+    sl_printf("uart fifo rx, len: %d, data: ", len);
 
     for (int i = 0; i < len; i++)
-        sys_prt_noNewLine("%02x ", data[i]);
+        sl_prt_noNewLine("%02x ", data[i]);
 
-    sys_prt_noNewLine("\n");
+    sl_prt_noNewLine("\n");
 
-    sys_prt_withFunc("uart fifo rx: %s", data);
+    sl_prt_withFunc("uart fifo rx: %s", data);
 }
 
 /************************** END OF FILE **************************/

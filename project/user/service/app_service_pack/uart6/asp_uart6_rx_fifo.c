@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
  * @file    asp_fifo
- * @author  暄暄
+ * @author  sloop
  * @date    2025-1-15
  * @brief   fifo
  * ==此文件用户不应变更==
@@ -63,14 +63,14 @@ void asp_fifo_enqueue(uint8_t *data, int len)
 {
     if (asp_fifo_isFull())
     {
-        sys_error("FIFO is full! Cannot enqueue.");
+        sl_error("FIFO is full! Cannot enqueue.");
 
         return;
     }
     
     if (len > FRAME_DATA_MAX_SIZE)
     {
-        sys_error("Frame data len too long (> %d)", FRAME_DATA_MAX_SIZE);
+        sl_error("Frame data len too long (> %d)", FRAME_DATA_MAX_SIZE);
 
         return;
     }
@@ -88,7 +88,7 @@ void asp_fifo_dequeue(uint8_t *data, int *len)
 {
     if (asp_fifo_isEmpty())
     {
-        sys_error("FIFO is empty! Cannot dequeue.");
+        sl_error("FIFO is empty! Cannot dequeue.");
 
         return;
     }
@@ -104,7 +104,7 @@ void asp_fifo_dequeue(uint8_t *data, int *len)
 /* 打印FIFO */
 void asp_fifo_print(void)
 {
-    sys_printf("FIFO contents:");
+    sl_printf("FIFO contents:");
 
     int len = 0;
 
@@ -114,11 +114,11 @@ void asp_fifo_print(void)
     {
         len = fifo.buffer[index].len;
 
-        sys_printf("Frame %d: len = %d, Data = ", i + 1, len);
+        sl_printf("Frame %d: len = %d, Data = ", i + 1, len);
 
         fifo.buffer[index].data[len] = 0;
 
-        sys_printf("%s", fifo.buffer[index].data);
+        sl_printf("%s", fifo.buffer[index].data);
 
         index = (index + 1) % FIFO_MAX_SIZE;
     }

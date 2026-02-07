@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
  * @file    asp_fifo
- * @author  暄暄
+ * @author  sloop
  * @date    2025-1-15
  * @brief   fifo
  * ==此文件用户不应变更==
@@ -54,7 +54,7 @@ void asp_fifo_enqueue(CanTxMsg *msg)
 {
     if (asp_fifo_isFull())
     {
-        sys_error("FIFO is full! Cannot enqueue.");
+        sl_error("FIFO is full! Cannot enqueue.");
 
         return;
     }
@@ -71,7 +71,7 @@ void asp_fifo_dequeue(CanTxMsg *msg)
 {
     if (asp_fifo_isEmpty())
     {
-        sys_error("FIFO is empty! Cannot dequeue.");
+        sl_error("FIFO is empty! Cannot dequeue.");
 
         return;
     }
@@ -86,7 +86,7 @@ void asp_fifo_dequeue(CanTxMsg *msg)
 /* 打印FIFO */
 void asp_fifo_print(void)
 {
-    sys_printf("FIFO contents:");
+    sl_printf("FIFO contents:");
 
     int index = fifo.head;
 
@@ -100,14 +100,14 @@ void asp_fifo_print(void)
 
         memcpy(buff, fifo.msg[index].Data, len);
 
-        sys_printf("msg %d len: %d, id: %d, data: ", i + 1, len, id);
+        sl_printf("msg %d len: %d, id: %d, data: ", i + 1, len, id);
 
         for (int i = 0; i < len; i++)
-            sys_prt_noNewLine("%02x ", buff[i]);
+            sl_prt_noNewLine("%02x ", buff[i]);
 
-        sys_prt_noNewLine("\n");
+        sl_prt_noNewLine("\n");
 
-        sys_prt_withFunc("msg: %s", buff);
+        sl_prt_withFunc("msg: %s", buff);
 
         index = (index + 1) % FIFO_MAX_SIZE;
     }

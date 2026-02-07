@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
  * @file    mcu_base_timer
- * @author  xuan
+ * @author  sloop
  * @date    2024-12-16
  * @brief   提供 MCU 基础定时器
  * ==此文件用户不应变更==
@@ -23,14 +23,14 @@ void mcu_base_timer_init(void)
 
     SystemCoreClockUpdate();
 
-    sys_prt_withFunc("SYSCLK: %d MHz", SystemCoreClock / 1000000);
+    sl_prt_withFunc("SYSCLK: %d MHz", SystemCoreClock / 1000000);
 
-#if SYS_WDG_ENABLE
+#if SL_WDG_ENABLE
 
     /* 配置看门狗 超时时间 1s */
     IWDG_init();
 
-    sys_printf("watch dog start");
+    sl_printf("watch dog start");
 
 #endif
 
@@ -50,7 +50,7 @@ void SysTick_Handler(void)
     mcu_tick_irq();
 }
 
-#if SYS_WDG_ENABLE
+#if SL_WDG_ENABLE
 
 void IWDG_init(void)
 {

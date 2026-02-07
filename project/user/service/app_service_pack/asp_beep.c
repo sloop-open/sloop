@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
  * @file    asp_beep
- * @author  暄暄
+ * @author  sloop
  * @date    2025-1-10
  * @brief   蜂鸣器驱动，支持多次鸣叫
  * ==此文件用户不应变更==
@@ -19,7 +19,7 @@ void asp_beep_init(void)
 {
     gpio_L(pin_beep);
 
-    sys_prt_withFunc("init: beep");
+    sl_prt_withFunc("init: beep");
 }
 
 /* 单次鸣叫 */
@@ -27,7 +27,7 @@ void asp_beep(int ms)
 {
     beep_on();
 
-    sys_timeout_start(ms, beep_off);
+    sl_timeout_start(ms, beep_off);
 }
 
 static int _continues;
@@ -38,14 +38,14 @@ void asp_beep_multiple(int num, int interval, int continues)
     /* 断言 interval > continues */
     if (interval <= continues)
     {
-        sys_error("The interval time should be greater than the continues. interval: %d, continues: %d", interval, continues);
+        sl_error("The interval time should be greater than the continues. interval: %d, continues: %d", interval, continues);
 
         return;
     }
 
     _continues = continues;
 
-    sys_multiple_start(num, interval, beep_once);
+    sl_multiple_start(num, interval, beep_once);
 }
 
 void beep_on(void)

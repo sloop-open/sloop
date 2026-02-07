@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
  * @file    task_baseInit
- * @author  暄暄
+ * @author  sloop
  * @date    2025-1-13
  * @brief   基础初始化
  *****************************************************************************/
@@ -14,7 +14,7 @@ void task_baseInit(void)
     _INIT; /* 初次进入任务时，执行一次 */
 
     /* 设置程序版本 */
-    sys_set_version("sloop Demo V1.0.0");
+    sl_set_version("sloop Demo V1.0.0");
 
     /* gpio 配置 */
     gpio_config();
@@ -51,9 +51,9 @@ void task_baseInit(void)
 
     asp_beep(100);
 
-    sys_wait(100);
+    sl_wait(100);
 
-    sys_goto(task_idle);
+    sl_goto(task_idle);
 
     _FREE; /* 任务结束，不再执行时，释放资源 */
 

@@ -110,7 +110,7 @@ weak_define(task_idle);
 int main(void)
 {
     sloop_init();           // 初始化Sloop内核
-    sys_goto(task_baseInit); // 跳转到基础初始化任务
+    sl_goto(task_baseInit); // 跳转到基础初始化任务
     
     while (1)
     {
@@ -134,13 +134,13 @@ Sloop内核是系统的核心，提供以下功能：
 
 ```c
 // 开始并行任务
-sys_task_start(my_task);
+sl_task_start(my_task);
 
 // 跳转互斥任务
-sys_goto(my_mutex_task);
+sl_goto(my_mutex_task);
 
 // 开始单次任务
-sys_task_once(my_once_task);
+sl_task_once(my_once_task);
 ```
 
 #### 时间管理
@@ -151,13 +151,13 @@ sys_task_once(my_once_task);
 
 ```c
 // 创建超时任务(100ms后执行)
-sys_timeout_start(100, my_timeout_task);
+sl_timeout_start(100, my_timeout_task);
 
 // 创建周期任务(每500ms执行一次)
-sys_cycle_start(500, my_cycle_task);
+sl_cycle_start(500, my_cycle_task);
 
 // 创建多次任务(执行10次，每200ms一次)
-sys_multiple_start(10, 200, my_multiple_task);
+sl_multiple_start(10, 200, my_multiple_task);
 ```
 
 #### 系统监控
@@ -233,9 +233,9 @@ void task_myTask(void)
     _RUN; // 任务运行代码标记
 
     // 执行任务操作
-    sys_wait(100); // 等待100ms
+    sl_wait(100); // 等待100ms
 
-    sys_goto(task_idle);
+    sl_goto(task_idle);
 }
 
 ### 任务类型与API
@@ -245,20 +245,20 @@ void task_myTask(void)
 
 ```c
 // 开始并行任务
-sys_task_start(my_parallel_task);
+sl_task_start(my_parallel_task);
 
 // 停止并行任务
-sys_task_stop(my_parallel_task);
+sl_task_stop(my_parallel_task);
 ```
 
-**注意**：所有需要在主线程轮询的任务必须通过`sys_task_start`调用，这样才能保证`sys_wait`非阻塞等待功能正常。
+**注意**：所有需要在主线程轮询的任务必须通过`sl_task_start`调用，这样才能保证`sl_wait`非阻塞等待功能正常。
 
 #### 互斥任务
 互斥任务是独占CPU执行的任务，一次只能执行一个互斥任务。
 
 ```c
 // 跳转到互斥任务
-sys_goto(my_mutex_task);
+sl_goto(my_mutex_task);
 ```
 
 **互斥任务的三个阶段**：
@@ -271,10 +271,10 @@ sys_goto(my_mutex_task);
 
 ```c
 // 启动超时任务(100ms后执行)
-sys_timeout_start(100, my_timeout_task);
+sl_timeout_start(100, my_timeout_task);
 
 // 停止超时任务
-sys_timeout_stop(my_timeout_task);
+sl_timeout_stop(my_timeout_task);
 ```
 
 #### 周期任务
@@ -282,10 +282,10 @@ sys_timeout_stop(my_timeout_task);
 
 ```c
 // 启动周期任务(每500ms执行一次)
-sys_cycle_start(500, my_cycle_task);
+sl_cycle_start(500, my_cycle_task);
 
 // 停止周期任务
-sys_cycle_stop(my_cycle_task);
+sl_cycle_stop(my_cycle_task);
 ```
 
 #### 多次任务
@@ -293,10 +293,10 @@ sys_cycle_stop(my_cycle_task);
 
 ```c
 // 启动多次任务(执行10次，每200ms一次)
-sys_multiple_start(10, 200, my_multiple_task);
+sl_multiple_start(10, 200, my_multiple_task);
 
 // 停止多次任务
-sys_multiple_stop(my_multiple_task);
+sl_multiple_stop(my_multiple_task);
 ```
 
 #### 单次任务
@@ -304,7 +304,7 @@ sys_multiple_stop(my_multiple_task);
 
 ```c
 // 执行单次任务
-sys_task_once(my_once_task);
+sl_task_once(my_once_task);
 ```
 
 ### 任务管理注意事项
@@ -322,18 +322,18 @@ sys_task_once(my_once_task);
    - 同一个回调即开启超时又开启周期是允许的
 
 3. **重置超时任务**：
-   - 只需重新调用`sys_timeout_start`
+   - 只需重新调用`sl_timeout_start`
    - 超时任务到达后会自动释放，没有副作用
 
 4. **非阻塞等待**：
-   - `sys_wait`和`sys_wait_bare`只能在互斥任务中调用
+   - `sl_wait`和`sl_wait_bare`只能在互斥任务中调用
    - 不允许嵌套调用
    - 调用会阻塞当前任务，但不影响其他并行任务执行
-   - 可以用`sys_wait_break`中断等待，`sys_wait_continue`忽略等待
+   - 可以用`sl_wait_break`中断等待，`sl_wait_continue`忽略等待
 
 ```c
-// sys_wait推荐使用方法
-if(sys_wait(10)) // 等待10ms
+// sl_wait推荐使用方法
+if(sl_wait(10)) // 等待10ms
     return; // 等待被中断，返回
 // 等待完成后的业务逻辑
 ```
@@ -343,13 +343,13 @@ if(sys_wait(10)) // 等待10ms
 
 ```c
 // 打印调试信息
-sys_printf("Debug message: %d\n", value);
+sl_printf("Debug message: %d\n", value);
 
 // 打印变量
-sys_prt_var(my_variable);
+sl_prt_var(my_variable);
 
 // 打印函数名和信息
-sys_prt_withFunc("Function executed");
+sl_prt_withFunc("Function executed");
 ```
 
 ## 配置说明
@@ -365,10 +365,10 @@ Sloop通过配置文件提供灵活的功能定制：
 #define PARALLEL_TASK_LIMIT 32 // 并行任务上限
 
 // 功能开关
-#define SYS_WDG_ENABLE 0      // 启用看门狗
-#define SYS_RTT_ENABLE 1      // 启用RTT打印
+#define SL_WDG_ENABLE 0      // 启用看门狗
+#define SL_RTT_ENABLE 1      // 启用RTT打印
 #define BHV_LOG_ENABLE 1      // 启用行为日志
-#define SYS_CMD_ENABLE 1      // 启用控制台
+#define SL_CMD_ENABLE 1      // 启用控制台
 ```
 
 ## 系统控制台
@@ -411,47 +411,47 @@ void sloop(void);           // 运行Sloop主循环
 #### 任务管理
 
 ```c
-void sys_task_start(pfunc task);  // 启动并行任务
-void sys_task_stop(pfunc task);   // 停止并行任务
-void sys_task_once(pfunc task);   // 执行单次任务
-void sys_goto(pfunc task);        // 跳转到互斥任务
+void sl_task_start(pfunc task);  // 启动并行任务
+void sl_task_stop(pfunc task);   // 停止并行任务
+void sl_task_once(pfunc task);   // 执行单次任务
+void sl_goto(pfunc task);        // 跳转到互斥任务
 ```
 
 #### 时间管理
 
 ```c
-void sys_timeout_start(int ms, pfunc task);  // 启动超时任务
-void sys_timeout_stop(pfunc task);           // 停止超时任务
-void sys_cycle_start(int ms, pfunc task);    // 启动周期任务
-void sys_cycle_stop(pfunc task);             // 停止周期任务
-void sys_multiple_start(int num, int ms, pfunc task); // 启动多次任务
-void sys_multiple_stop(pfunc task);          // 停止多次任务
+void sl_timeout_start(int ms, pfunc task);  // 启动超时任务
+void sl_timeout_stop(pfunc task);           // 停止超时任务
+void sl_cycle_start(int ms, pfunc task);    // 启动周期任务
+void sl_cycle_stop(pfunc task);             // 停止周期任务
+void sl_multiple_start(int num, int ms, pfunc task); // 启动多次任务
+void sl_multiple_stop(pfunc task);          // 停止多次任务
 ```
 
 #### 非阻塞等待
 
 ```c
-char sys_wait(int ms);            // 非阻塞等待指定时间
-char sys_wait_bare(void);         // 非阻塞裸等待
-char sys_is_waiting(void);        // 查询等待状态
-void sys_wait_break(void);        // 中断等待
-void sys_wait_continue(void);     // 忽略等待并继续执行
+char sl_wait(int ms);            // 非阻塞等待指定时间
+char sl_wait_bare(void);         // 非阻塞裸等待
+char sl_is_waiting(void);        // 查询等待状态
+void sl_wait_break(void);        // 中断等待
+void sl_wait_continue(void);     // 忽略等待并继续执行
 ```
 
 
 ## 常见问题
 
 ### Q: 如何添加新的任务？
-A: 1. 在头文件中声明任务函数 2. 在源文件中实现任务逻辑 3. 通过sys_goto或sys_task_start启用任务
+A: 1. 在头文件中声明任务函数 2. 在源文件中实现任务逻辑 3. 通过sl_goto或sl_task_start启用任务
 
 ### Q: 如何配置串口波特率？
 A: 在uart_config.h文件中修改BAUD_RATE宏定义
 
 ### Q: 如何启用RTT调试？
-A: 在bl_config.h中设置SYS_RTT_ENABLE为1
+A: 在bl_config.h中设置SL_RTT_ENABLE为1
 
 ### Q: 如何处理超时任务？
-A: 使用sys_timeout_start函数创建超时任务，指定延迟时间和回调函数
+A: 使用sl_timeout_start函数创建超时任务，指定延迟时间和回调函数
 
 ## 版本历史
 
@@ -604,7 +604,7 @@ weak_define(task_idle);
 int main(void)
 {
     sloop_init();           // Initialize Sloop kernel
-    sys_goto(task_baseInit); // Jump to base initialization task
+    sl_goto(task_baseInit); // Jump to base initialization task
     
     while (1)
     {
@@ -628,13 +628,13 @@ The Sloop kernel is the core of the system, providing the following functions:
 
 ```c
 // Start parallel task
-sys_task_start(my_task);
+sl_task_start(my_task);
 
 // Jump to mutex task
-sys_goto(my_mutex_task);
+sl_goto(my_mutex_task);
 
 // Start once task
-sys_task_once(my_once_task);
+sl_task_once(my_once_task);
 ```
 
 #### Time Management
@@ -645,13 +645,13 @@ sys_task_once(my_once_task);
 
 ```c
 // Create timeout task (execute after 100ms)
-sys_timeout_start(100, my_timeout_task);
+sl_timeout_start(100, my_timeout_task);
 
 // Create cycle task (execute every 500ms)
-sys_cycle_start(500, my_cycle_task);
+sl_cycle_start(500, my_cycle_task);
 
 // Create multiple task (execute 10 times, every 200ms)
-sys_multiple_start(10, 200, my_multiple_task);
+sl_multiple_start(10, 200, my_multiple_task);
 ```
 
 #### System Monitoring
@@ -725,9 +725,9 @@ void task_myTask(void)
     _RUN; // Task running code marker
 
     // Execute task operations
-    sys_wait(100); // Wait for 100ms
+    sl_wait(100); // Wait for 100ms
 
-    sys_goto(task_idle);
+    sl_goto(task_idle);
 }
 
 ```
@@ -739,20 +739,20 @@ Parallel tasks are tasks executed in a polling manner in the main thread, all sh
 
 ```c
 // Start parallel task
-sys_task_start(my_parallel_task);
+sl_task_start(my_parallel_task);
 
 // Stop parallel task
-sys_task_stop(my_parallel_task);
+sl_task_stop(my_parallel_task);
 ```
 
-**Note**: All tasks that need to be polled in the main thread must be called through `sys_task_start` to ensure the normal operation of `sys_wait` non-blocking waiting function.
+**Note**: All tasks that need to be polled in the main thread must be called through `sl_task_start` to ensure the normal operation of `sl_wait` non-blocking waiting function.
 
 #### Mutex Tasks
 Mutex tasks are tasks that exclusively occupy the CPU for execution, and only one mutex task can be executed at a time.
 
 ```c
 // Jump to mutex task
-sys_goto(my_mutex_task);
+sl_goto(my_mutex_task);
 ```
 
 **Three stages of mutex tasks**:
@@ -765,10 +765,10 @@ Timeout tasks execute once after a specified time delay.
 
 ```c
 // Start timeout task (execute after 100ms)
-sys_timeout_start(100, my_timeout_task);
+sl_timeout_start(100, my_timeout_task);
 
 // Stop timeout task
-sys_timeout_stop(my_timeout_task);
+sl_timeout_stop(my_timeout_task);
 ```
 
 #### Cycle Tasks
@@ -776,10 +776,10 @@ Cycle tasks execute repeatedly at fixed intervals.
 
 ```c
 // Start cycle task (execute every 500ms)
-sys_cycle_start(500, my_cycle_task);
+sl_cycle_start(500, my_cycle_task);
 
 // Stop cycle task
-sys_cycle_stop(my_cycle_task);
+sl_cycle_stop(my_cycle_task);
 ```
 
 #### Multiple Tasks
@@ -787,10 +787,10 @@ Multiple tasks execute cycle tasks a specified number of times.
 
 ```c
 // Start multiple task (execute 10 times, every 200ms)
-sys_multiple_start(10, 200, my_multiple_task);
+sl_multiple_start(10, 200, my_multiple_task);
 
 // Stop multiple task
-sys_multiple_stop(my_multiple_task);
+sl_multiple_stop(my_multiple_task);
 ```
 
 #### Once Tasks
@@ -798,7 +798,7 @@ Once tasks execute only once.
 
 ```c
 // Execute once task
-sys_task_once(my_once_task);
+sl_task_once(my_once_task);
 ```
 
 ### Task Management Notes
@@ -816,18 +816,18 @@ sys_task_once(my_once_task);
    - It is allowed to open both timeout and cycle tasks with the same callback
 
 3. **Reset timeout tasks**:
-   - Simply call `sys_timeout_start` again
+   - Simply call `sl_timeout_start` again
    - Timeout tasks will be automatically released after timeout, no side effects
 
 4. **Non-blocking waiting**:
-   - `sys_wait` and `sys_wait_bare` can only be called in mutex tasks
+   - `sl_wait` and `sl_wait_bare` can only be called in mutex tasks
    - Nested calls are not allowed
    - Calling blocks the current task, but does not affect other parallel tasks
-   - Can use `sys_wait_break` to interrupt waiting, `sys_wait_continue` to ignore waiting
+   - Can use `sl_wait_break` to interrupt waiting, `sl_wait_continue` to ignore waiting
 
 ```c
-// Recommended usage of sys_wait
-if(sys_wait(10)) // Wait for 10ms
+// Recommended usage of sl_wait
+if(sl_wait(10)) // Wait for 10ms
     return; // Waiting interrupted, return
 // Business logic after waiting completes
 ```
@@ -836,13 +836,13 @@ if(sys_wait(10)) // Wait for 10ms
 
 ```c
 // Print debug message
-sys_printf("Debug message: %d\n", value);
+sl_printf("Debug message: %d\n", value);
 
 // Print variable
-sys_prt_var(my_variable);
+sl_prt_var(my_variable);
 
 // Print function name and information
-sys_prt_withFunc("Function executed");
+sl_prt_withFunc("Function executed");
 ```
 
 ## Configuration
@@ -858,10 +858,10 @@ Sloop provides flexible function customization through configuration files:
 #define PARALLEL_TASK_LIMIT 32 // Parallel task limit
 
 // Function switches
-#define SYS_WDG_ENABLE 0      // Enable watchdog
-#define SYS_RTT_ENABLE 1      // Enable RTT printing
+#define SL_WDG_ENABLE 0      // Enable watchdog
+#define SL_RTT_ENABLE 1      // Enable RTT printing
 #define BHV_LOG_ENABLE 1      // Enable behavior logging
-#define SYS_CMD_ENABLE 1      // Enable console
+#define SL_CMD_ENABLE 1      // Enable console
 ```
 
 ## System Console
@@ -905,46 +905,46 @@ void sloop(void);           // Run Sloop main loop
 #### Task Management
 
 ```c
-void sys_task_start(pfunc task);  // Start parallel task
-void sys_task_stop(pfunc task);   // Stop parallel task
-void sys_task_once(pfunc task);   // Execute once task
-void sys_goto(pfunc task);        // Jump to mutex task
+void sl_task_start(pfunc task);  // Start parallel task
+void sl_task_stop(pfunc task);   // Stop parallel task
+void sl_task_once(pfunc task);   // Execute once task
+void sl_goto(pfunc task);        // Jump to mutex task
 ```
 
 #### Time Management
 
 ```c
-void sys_timeout_start(int ms, pfunc task);  // Start timeout task
-void sys_timeout_stop(pfunc task);           // Stop timeout task
-void sys_cycle_start(int ms, pfunc task);    // Start cycle task
-void sys_cycle_stop(pfunc task);             // Stop cycle task
-void sys_multiple_start(int num, int ms, pfunc task); // Start multiple task
-void sys_multiple_stop(pfunc task);          // Stop multiple task
+void sl_timeout_start(int ms, pfunc task);  // Start timeout task
+void sl_timeout_stop(pfunc task);           // Stop timeout task
+void sl_cycle_start(int ms, pfunc task);    // Start cycle task
+void sl_cycle_stop(pfunc task);             // Stop cycle task
+void sl_multiple_start(int num, int ms, pfunc task); // Start multiple task
+void sl_multiple_stop(pfunc task);          // Stop multiple task
 ```
 
 #### Non-blocking Waiting
 
 ```c
-char sys_wait(int ms);            // Non-blocking wait for specified time
-char sys_wait_bare(void);         // Non-blocking bare wait
-char sys_is_waiting(void);        // Query wait status
-void sys_wait_break(void);        // Interrupt wait
-void sys_wait_continue(void);     // Ignore wait and continue execution
+char sl_wait(int ms);            // Non-blocking wait for specified time
+char sl_wait_bare(void);         // Non-blocking bare wait
+char sl_is_waiting(void);        // Query wait status
+void sl_wait_break(void);        // Interrupt wait
+void sl_wait_continue(void);     // Ignore wait and continue execution
 ```
 
 ## FAQ
 
 ### Q: How to add a new task?
-A: 1. Declare the task function in the header file 2. Implement the task logic in the source file 3. Enable the task through sys_goto or sys_task_start
+A: 1. Declare the task function in the header file 2. Implement the task logic in the source file 3. Enable the task through sl_goto or sl_task_start
 
 ### Q: How to configure UART baud rate?
 A: Modify the BAUD_RATE macro definition in the uart_config.h file
 
 ### Q: How to enable RTT debugging?
-A: Set SYS_RTT_ENABLE to 1 in bl_config.h
+A: Set SL_RTT_ENABLE to 1 in bl_config.h
 
 ### Q: How to handle timeout tasks?
-A: Use the sys_timeout_start function to create a timeout task, specifying the delay time and callback function
+A: Use the sl_timeout_start function to create a timeout task, specifying the delay time and callback function
 
 ## Version History
 

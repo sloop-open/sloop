@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
  * @file    asp_param
- * @author  暄暄
+ * @author  sloop
  * @date    2022-2-20
  * @brief   参数的保存和还原,添加参数，请参考注释执行6个步骤。
  * 默认以 FLASH 为介质，可选 EEP
@@ -77,16 +77,16 @@ void paramRestore(void)
     /* 还原数据 */
     convert = param.convert;
 
-    sys_prt_float(convert);
+    sl_prt_float(convert);
 
-    sys_prt_withFunc("parameter restore successful");
+    sl_prt_withFunc("parameter restore successful");
 }
 
 void param_write(void)
 {
     msp_param_write((uint8_t *)&param, sizeof(param));
 
-    sys_prt_withFunc("parameters saved successfully");
+    sl_prt_withFunc("parameters saved successfully");
 }
 
 void asp_param_save(void)
@@ -106,7 +106,7 @@ void asp_param_save(void)
         return;
 
     /* 开启超时写入 */
-    sys_timeout_start(100, param_write);
+    sl_timeout_start(100, param_write);
 }
 
 void asp_auto_init_param(void)
@@ -123,9 +123,9 @@ void asp_auto_init_param(void)
 
     msp_param_write((uint8_t *)&param_Default, sizeof(param_Default));
 
-    sys_wait(10);
+    sl_wait(10);
 
-    sys_printf("force write default param");
+    sl_printf("force write default param");
 
 #endif
 
@@ -140,16 +140,16 @@ void asp_auto_init_param(void)
         /* 先擦除当前页，再写入，防止残留，导致出错 */
         asp_eep24c64_erase_page(PARAM_ADDR);
 
-        sys_wait(10);
+        sl_wait(10);
 
 #endif
 
         /* 写入默认参数 */
         msp_param_write((uint8_t *)&param_Default, sizeof(param_Default));
 
-        sys_wait(10);
+        sl_wait(10);
 
-        sys_printf("init: write default param");
+        sl_printf("init: write default param");
     }
 
     /* 校验参数 */
@@ -177,21 +177,21 @@ void check_param(void)
 
 lable:
 
-    sys_error("param err, start default param");
+    sl_error("param err, start default param");
 
 #if !USE_FLASH
 
     /* 先擦除当前页，再写入，防止残留，导致出错 */
     asp_eep24c64_erase_page(PARAM_ADDR);
 
-    sys_wait(10);
+    sl_wait(10);
 
 #endif
 
     /* 写入默认参数 */
     msp_param_write((uint8_t *)&param_Default, sizeof(param_Default));
 
-    sys_wait(10);
+    sl_wait(10);
 }
 
 /*********************************** END OF FILE ***********************************/

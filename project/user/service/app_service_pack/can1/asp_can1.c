@@ -1,7 +1,7 @@
 /**
 ******************************************************************************
 * @file    asp_can
-* @author  暄暄
+* @author  sloop
 * @date    2025-1-16
 * @brief   提供 can 接收发送驱动及服务，收发都是 DMA+FIFO
 ==此文件用户不应变更==
@@ -24,7 +24,7 @@ void asp_can1_init(void)
     /* can 接收初始化 */
     asp_can_receive_init();
 
-    sys_prt_withFunc("init: can1");
+    sl_prt_withFunc("init: can1");
 }
 
 /*********************************** END OF FILE ***********************************/

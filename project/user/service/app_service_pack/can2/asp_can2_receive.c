@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
  * @file    asp_can_receive
- * @author  暄暄
+ * @author  sloop
  * @date    2025-1-15
  * @brief   can 带FIFO的接收驱动
  * ==此文件用户不应变更==
@@ -19,7 +19,7 @@ void asp_can_receive_init(void)
 {
     asp_fifo_init();
 
-    sys_task_start(fifo_dequeue);
+    sl_task_start(fifo_dequeue);
 }
 
 /* FIFO出队 */
@@ -53,14 +53,14 @@ __weak void asp_can_receive_callback(CanRxMsg *msg)
 
     memcpy(buff, msg->Data, len);
 
-    sys_printf("can fifo rx, len: %d, id: %d, data: ", len, id);
+    sl_printf("can fifo rx, len: %d, id: %d, data: ", len, id);
 
     for (int i = 0; i < len; i++)
-        sys_prt_noNewLine("%02x ", buff[i]);
+        sl_prt_noNewLine("%02x ", buff[i]);
 
-    sys_prt_noNewLine("\n");
+    sl_prt_noNewLine("\n");
 
-    sys_prt_withFunc("can fifo rx: %s", buff);
+    sl_prt_withFunc("can fifo rx: %s", buff);
 }
 
 /************************** END OF FILE **************************/

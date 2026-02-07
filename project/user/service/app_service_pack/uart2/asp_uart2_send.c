@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
  * @file    asp_uart_send
- * @author  暄暄
+ * @author  sloop
  * @date    2025-1-15
  * @brief   串口带FIFO的发送驱动
  * ==此文件用户不应变更==
@@ -27,7 +27,7 @@ void asp_uart_send_init(void)
 {
     asp_fifo_init();
 
-    sys_task_start(fifo_dequeue);
+    sl_task_start(fifo_dequeue);
 }
 
 /* 带FIFO的串口发送 */
@@ -35,7 +35,7 @@ void asp_uart_send(uint8_t *data, int len)
 {
     if (len == 0)
     {
-        sys_error("Send length is 0");
+        sl_error("Send length is 0");
 
         return;
     }
@@ -65,7 +65,7 @@ static void fifo_dequeue(void)
     if (!asp_fifo_isEmpty())
     {
         /* 与上次发送间隔时间 */
-        if ((sys_get_tick() - tx_cplt_tick) > TX_INTERVAL)
+        if ((sl_get_tick() - tx_cplt_tick) > TX_INTERVAL)
         {
             /* 启动发送链 */
             uart_send_dequeue();
@@ -92,12 +92,12 @@ static void uart_send_dequeue(void)
 /* 发送完成回调 */
 void msp_uart_txCplt_callback(void)
 {
-    tx_cplt_tick = sys_get_tick();
+    tx_cplt_tick = sl_get_tick();
 
     if (asp_fifo_isEmpty())
         return;
 
-    sys_timeout_start(TX_INTERVAL, uart_send_dequeue);
+    sl_timeout_start(TX_INTERVAL, uart_send_dequeue);
 }
 
 /************************** END OF FILE **************************/

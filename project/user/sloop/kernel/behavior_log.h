@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
  * @file    behavior_log
- * @author  xuan
+ * @author  sloop
  * @date    2024-12-18
  * @brief   在 bl_config.h 中开启行为日志功能。
  * 开启行为日志后，会对系统 API 进行打印增强。即在调用系统 API 时会有相应日志输出。
@@ -15,7 +15,7 @@
 
 #include "bl_config.h"
 
-#if !SYS_RTT_ENABLE
+#if !SL_RTT_ENABLE
 
 #undef BHV_LOG_ENABLE
 
@@ -28,71 +28,71 @@ void add_task_name(pfunc task, char *str);
 
 #if BHV_LOG_ENABLE
 
-#define sys_delay(ms)                         \
+#define sl_delay(ms)                         \
     do                                        \
     {                                         \
-        sys_prt_withFunc("delay: %d ms", ms); \
-        sys_delay(ms);                        \
+        sl_prt_withFunc("delay: %d ms", ms); \
+        sl_delay(ms);                        \
     } while (0)
 
 /* ============================================================== */
 
-#define sys_timeout_start(ms, task)                                   \
+#define sl_timeout_start(ms, task)                                   \
     do                                                                \
     {                                                                 \
-        sys_prt_withFunc("timeout task start: %d ms, %s", ms, #task); \
-        sys_timeout_start(ms, task);                                  \
+        sl_prt_withFunc("timeout task start: %d ms, %s", ms, #task); \
+        sl_timeout_start(ms, task);                                  \
     } while (0)
 
-#define sys_timeout_stop(task)                             \
+#define sl_timeout_stop(task)                             \
     do                                                     \
     {                                                      \
-        sys_prt_withFunc("timeout task stop:  %s", #task); \
-        sys_timeout_stop(task);                            \
+        sl_prt_withFunc("timeout task stop:  %s", #task); \
+        sl_timeout_stop(task);                            \
     } while (0)
 
 /* ============================================================== */
 
-#define sys_cycle_start(ms, task)                                   \
+#define sl_cycle_start(ms, task)                                   \
     do                                                              \
     {                                                               \
         add_task_name(task, #task);                                 \
-        sys_prt_withFunc("cycle task start: %d ms, %s", ms, #task); \
-        sys_cycle_start(ms, task);                                  \
+        sl_prt_withFunc("cycle task start: %d ms, %s", ms, #task); \
+        sl_cycle_start(ms, task);                                  \
     } while (0)
 
-#define sys_cycle_stop(task)                             \
+#define sl_cycle_stop(task)                             \
     do                                                   \
     {                                                    \
-        sys_prt_withFunc("cycle task stop:  %s", #task); \
-        sys_cycle_stop(task);                            \
+        sl_prt_withFunc("cycle task stop:  %s", #task); \
+        sl_cycle_stop(task);                            \
     } while (0)
 
 /* ============================================================== */
 
-#define sys_task_start(task)                                \
+#define sl_task_start(task)                                \
     do                                                      \
     {                                                       \
         add_task_name(task, #task);                         \
-        sys_prt_withFunc("parallel task start: %s", #task); \
-        sys_task_start(task);                               \
+        sl_prt_withFunc("parallel task start: %s", #task); \
+        sl_task_start(task);                               \
     } while (0)
 
-#define sys_task_stop(task)                                 \
+#define sl_task_stop(task)                                 \
     do                                                      \
     {                                                       \
-        sys_prt_withFunc("parallel task stop:  %s", #task); \
-        sys_task_stop(task);                                \
+        sl_prt_withFunc("parallel task stop:  %s", #task); \
+        sl_task_stop(task);                                \
     } while (0)
 
 /* ============================================================== */
 
-#define sys_goto(task)                      \
+#define sl_goto(task)                      \
     do                                      \
     {                                       \
         add_task_name(task, #task);         \
-        sys_prt_withFunc("goto %s", #task); \
-        sys_goto(task);                     \
+        sl_prt_withFunc("goto %s", #task); \
+        sl_goto(task);                     \
     } while (0)
 
 #endif /* BHV_LOG_ENABLE */

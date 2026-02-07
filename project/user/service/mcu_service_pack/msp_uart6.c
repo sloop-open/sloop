@@ -1,7 +1,7 @@
 /**
  ******************************************************************************
  * @file    msp_uart
- * @author  暄暄
+ * @author  sloop
  * @date    2025-1-10
  * @brief   提供串口接收发送驱动及服务，收发都是DMA
  * ==此文件用户不应变更==
@@ -149,7 +149,7 @@ void USARTx_IRQHandler(void)
         dma_count_old = -1;
 
         /* 启动串口超时检出任务 */
-        sys_task_start(rx_timeout_checkOut);
+        sl_task_start(rx_timeout_checkOut);
 
         /* 清除IDLE */
         (void)USARTx->DR;
@@ -175,10 +175,10 @@ static void rx_timeout_checkOut(void)
 
     if (dma_count != dma_count_old)
     {
-        sys_timeout_start(TIMEOUT_RX, uart_rx_timeout_process);
+        sl_timeout_start(TIMEOUT_RX, uart_rx_timeout_process);
 
         if (dma_count == 0)
-            sys_error("The serial port received a very long frame, the length > %d", RX_LEN);
+            sl_error("The serial port received a very long frame, the length > %d", RX_LEN);
 
         dma_count_old = dma_count;
     }
@@ -188,7 +188,7 @@ static void rx_timeout_checkOut(void)
 static void uart_rx_timeout_process(void)
 {
     /* 停止串口超时检出任务 */
-    sys_task_stop(rx_timeout_checkOut);
+    sl_task_stop(rx_timeout_checkOut);
 
     /* 中断接收DMA */
     DMA_Cmd(USARTx_RX_DMA_STREAM, DISABLE);
@@ -203,18 +203,18 @@ static void uart_rx_timeout_process(void)
 
     count++;
 
-    sys_prt_var(count);
+    sl_prt_var(count);
 
     rx_buffer[rxlen] = 0;
 
-    sys_prt_noNewLine(RTT_CTRL_TEXT_BRIGHT_YELLOW "\nuart rx len: %d, data: ", rxlen);
+    sl_prt_noNewLine(RTT_CTRL_TEXT_BRIGHT_YELLOW "\nuart rx len: %d, data: ", rxlen);
 
     for (int i = 0; i < rxlen; i++)
-        sys_prt_noNewLine(RTT_CTRL_TEXT_BRIGHT_YELLOW "%02x ", rx_buffer[i]);
+        sl_prt_noNewLine(RTT_CTRL_TEXT_BRIGHT_YELLOW "%02x ", rx_buffer[i]);
 
-    sys_prt_noNewLine("\n");
+    sl_prt_noNewLine("\n");
 
-    sys_prt_withFunc(RTT_CTRL_TEXT_BRIGHT_YELLOW "uart rx: %s", rx_buffer);
+    sl_prt_withFunc(RTT_CTRL_TEXT_BRIGHT_YELLOW "uart rx: %s", rx_buffer);
 
 #endif
 
@@ -239,7 +239,7 @@ void msp_uart_tx(uint8_t *data, int len)
     /* 检查长度 */
     if (len > TX_LEN)
     {
-        sys_error("uart tx len too long (> %d)", TX_LEN);
+        sl_error("uart tx len too long (> %d)", TX_LEN);
 
         return;
     }
@@ -247,7 +247,7 @@ void msp_uart_tx(uint8_t *data, int len)
     /* 检查TC标志 */
     if (tx_cplt == 0)
     {
-        sys_error("The last sending has not been completed yet");
+        sl_error("The last sending has not been completed yet");
 
         return;
     }
@@ -261,18 +261,18 @@ void msp_uart_tx(uint8_t *data, int len)
 
     count++;
 
-    sys_prt_var(count);
+    sl_prt_var(count);
 
     tx_buffer[len] = 0;
 
-    sys_prt_noNewLine(RTT_CTRL_TEXT_BRIGHT_WHITE "\nuart tx len: %d, data: ", len);
+    sl_prt_noNewLine(RTT_CTRL_TEXT_BRIGHT_WHITE "\nuart tx len: %d, data: ", len);
 
     for (int i = 0; i < len; i++)
-        sys_prt_noNewLine(RTT_CTRL_TEXT_BRIGHT_WHITE "%02x ", tx_buffer[i]);
+        sl_prt_noNewLine(RTT_CTRL_TEXT_BRIGHT_WHITE "%02x ", tx_buffer[i]);
 
-    sys_prt_noNewLine("\n");
+    sl_prt_noNewLine("\n");
 
-    sys_prt_withFunc(RTT_CTRL_TEXT_BRIGHT_WHITE "uart tx: %s", tx_buffer);
+    sl_prt_withFunc(RTT_CTRL_TEXT_BRIGHT_WHITE "uart tx: %s", tx_buffer);
 
 #endif
 
@@ -300,7 +300,7 @@ __weak void msp_uart_rx_callback(uint8_t *data, int len)
 /* 发送完成回调 */
 __weak void msp_uart_txCplt_callback(void)
 {
-    sys_printf("tx complete");
+    sl_printf("tx complete");
 }
 
 /*********************************** END OF FILE ***********************************/

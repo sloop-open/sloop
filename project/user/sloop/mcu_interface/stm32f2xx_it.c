@@ -51,7 +51,7 @@
  */
 void NMI_Handler(void)
 {
-  sys_error("A NMI_IRQ occurred.");
+  sl_error("A NMI_IRQ occurred.");
 
   while (1)
   {
@@ -65,8 +65,8 @@ void NMI_Handler(void)
  */
 void HardFault_Handler(void)
 {
-  sys_error("A HardFault_IRQ occurred.");
-  sys_error("It may be that the function pointer is not initialized, resulting in NULL pointer dereference.");
+  sl_error("A HardFault_IRQ occurred.");
+  sl_error("It may be that the function pointer is not initialized, resulting in NULL pointer dereference.");
 
   /*
   下面的这些地址是从栈中解析出的疑似出错前的函数调用关系。
@@ -81,7 +81,7 @@ void HardFault_Handler(void)
 
   uint32_t *stack = (uint32_t *)msp;
 
-  sys_prt_brYellow("The following addresses are the function call relationships before suspected error parsed from the stack.");
+  sl_prt_brYellow("The following addresses are the function call relationships before suspected error parsed from the stack.");
 
   /* 按深度检索栈 */
   int len = 64;
@@ -91,7 +91,7 @@ void HardFault_Handler(void)
   {
     if ((stack[i] & 0xFFF00000) == FLASH_BASE)
     {
-      sys_prt_brWhite("%d: 0x%08x", ++count, stack[i]);
+      sl_prt_brWhite("%d: 0x%08x", ++count, stack[i]);
     }
   }
 
@@ -108,7 +108,7 @@ void HardFault_Handler(void)
  */
 void MemManage_Handler(void)
 {
-  sys_error("A MemManage_IRQ occurred.");
+  sl_error("A MemManage_IRQ occurred.");
 
   /* Go to infinite loop when Memory Manage exception occurs */
   while (1)
@@ -123,7 +123,7 @@ void MemManage_Handler(void)
  */
 void BusFault_Handler(void)
 {
-  sys_error("A BusFault_IRQ occurred.");
+  sl_error("A BusFault_IRQ occurred.");
 
   /* Go to infinite loop when Bus Fault exception occurs */
   while (1)
@@ -138,7 +138,7 @@ void BusFault_Handler(void)
  */
 void UsageFault_Handler(void)
 {
-  sys_error("A UsageFault occurred.");
+  sl_error("A UsageFault occurred.");
 
   /* Go to infinite loop when Usage Fault exception occurs */
   while (1)
@@ -153,7 +153,7 @@ void UsageFault_Handler(void)
  */
 void SVC_Handler(void)
 {
-  sys_error("A SVC_IRQ occurred.");
+  sl_error("A SVC_IRQ occurred.");
 
   while (1)
   {
@@ -167,7 +167,7 @@ void SVC_Handler(void)
  */
 void DebugMon_Handler(void)
 {
-  sys_error("A DebugMon occurred.");
+  sl_error("A DebugMon occurred.");
 
   while (1)
   {
@@ -181,7 +181,7 @@ void DebugMon_Handler(void)
  */
 void PendSV_Handler(void)
 {
-  sys_error("A PendSV_IRQ occurred.");
+  sl_error("A PendSV_IRQ occurred.");
 
   while (1)
   {
