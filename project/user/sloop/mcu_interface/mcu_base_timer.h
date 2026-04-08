@@ -10,7 +10,7 @@
 #ifndef __mcu_base_timer_H
 #define __mcu_base_timer_H
 
-#include "bl_common.h"
+#include "sl_common.h"
 
 /* MCU 基础定时器初始化 */
 void mcu_base_timer_init(void);

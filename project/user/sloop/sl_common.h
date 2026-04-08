@@ -1,21 +1,21 @@
 /**
  ******************************************************************************
- * @file    bl_common
+ * @file    sl_common
  * @author  sloop
  * @date    2024-12-24
  * @brief   杂项包含
  * ==此文件用户不应变更==
  *****************************************************************************/
 
-#ifndef __bl_common_H
-#define __bl_common_H
+#ifndef __sl_common_H
+#define __sl_common_H
 
 #include "stm32f2xx.h"
 #include "SEGGER_RTT.h"
 #include "string.h"
 #include "math.h"
 #include "stdio.h"
-#include "bl_config.h"
+#include "sl_config.h"
 
 #ifndef __weak
 #define __weak __attribute__((weak))
@@ -133,6 +133,6 @@ void sl_load_new_task(void);
     return;                         \
     }
 
-#endif /* __bl_common_H */
+#endif /* __sl_common_H */
 
 /*********************************** END OF FILE ***********************************/

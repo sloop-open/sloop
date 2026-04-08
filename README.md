@@ -356,7 +356,7 @@ sl_prt_withFunc("Function executed");
 
 Sloop通过配置文件提供灵活的功能定制：
 
-### 内核配置(bl_config.h)
+### 内核配置(sl_config.h)
 
 ```c
 // 任务数量限制
@@ -448,7 +448,7 @@ A: 1. 在头文件中声明任务函数 2. 在源文件中实现任务逻辑 3. 通过sl_goto或sl_task_s
 A: 在uart_config.h文件中修改BAUD_RATE宏定义
 
 ### Q: 如何启用RTT调试？
-A: 在bl_config.h中设置SL_RTT_ENABLE为1
+A: 在sl_config.h中设置SL_RTT_ENABLE为1
 
 ### Q: 如何处理超时任务？
 A: 使用sl_timeout_start函数创建超时任务，指定延迟时间和回调函数
@@ -849,7 +849,7 @@ sl_prt_withFunc("Function executed");
 
 Sloop provides flexible function customization through configuration files:
 
-### Kernel Configuration (bl_config.h)
+### Kernel Configuration (sl_config.h)
 
 ```c
 // Task quantity limits
@@ -941,7 +941,7 @@ A: 1. Declare the task function in the header file 2. Implement the task logic i
 A: Modify the BAUD_RATE macro definition in the uart_config.h file
 
 ### Q: How to enable RTT debugging?
-A: Set SL_RTT_ENABLE to 1 in bl_config.h
+A: Set SL_RTT_ENABLE to 1 in sl_config.h
 
 ### Q: How to handle timeout tasks?
 A: Use the sl_timeout_start function to create a timeout task, specifying the delay time and callback function

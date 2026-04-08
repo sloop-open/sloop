@@ -3,7 +3,7 @@
  * @file    behavior_log
  * @author  sloop
  * @date    2024-12-18
- * @brief   在 bl_config.h 中开启行为日志功能。
+ * @brief   在 sl_config.h 中开启行为日志功能。
  * 开启行为日志后，会对系统 API 进行打印增强。即在调用系统 API 时会有相应日志输出。
  * 这对分析系统工作流程会有帮助。
  *
@@ -13,7 +13,7 @@
 #ifndef __behavior_log_H
 #define __behavior_log_H
 
-#include "bl_config.h"
+#include "sl_config.h"
 
 #if !SL_RTT_ENABLE
 

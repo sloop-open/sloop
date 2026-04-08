@@ -1,14 +1,14 @@
 /**
  ******************************************************************************
- * @file    bl_config
+ * @file    sl_config
  * @author  sloop
  * @date    2024-12-18
  * @brief   在此处配置 sloop 和启用功能模块
  * ==此文件用户可配置==
  *****************************************************************************/
 
-#ifndef __bl_config_H
-#define __bl_config_H
+#ifndef __sl_config_H
+#define __sl_config_H
 
 /* 超时任务上限 */
 #define TIMEOUT_LIMIT 16
@@ -48,6 +48,6 @@
 /* 启用控制台 */
 #define SL_CMD_ENABLE 1
 
-#endif /* __bl_config_H */
+#endif /* __sl_config_H */
 
 /************************** END OF FILE **************************/

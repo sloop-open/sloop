@@ -10,7 +10,7 @@
 #ifndef __sloop_H
 #define __sloop_H
 
-#include "bl_common.h"
+#include "sl_common.h"
 
 /* sloop 系统初始化 */
 void sloop_init(void);
