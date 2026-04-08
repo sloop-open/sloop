@@ -13,7 +13,8 @@ void stop_test(void);
 
 void task_demo(void)
 {
-    _INIT; /* 初次进入任务时，执行一次 */
+    /* 初次进入任务时，执行一次 */
+    _INIT;
 
     /* 开启测试任务 */
     sl_cycle_start(1000, test);
@@ -21,12 +22,14 @@ void task_demo(void)
     /* 3秒后结束测试 */
     sl_timeout_start(3000, stop_test);
 
-    _FREE; /* 任务结束，不再执行时，释放资源 */
+    /* 任务结束，不再执行时，释放资源 */
+    _FREE;
 
     /* 离开任务自动关闭 */
     sl_cycle_stop(test);
 
-    _RUN; /* 下方开始进入任务运行逻辑 */
+    /* 下方开始进入任务运行逻辑 */
+    _RUN;
 
     /* 等待测试结束 */
     if (sl_wait_bare())
