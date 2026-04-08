@@ -207,6 +207,32 @@ Sloop采用**动态注册机制**，任务不需要提前注册，直接调用API开始或停止任务。
 - `void sl_prt_var(var);` - 打印变量名和值
 - `void sl_prt_withFunc(const char* info);` - 打印函数名和信息
 
+## 移植指南
+
+### 核心移植点
+
+#### 1. mcu_interface 文件夹适配
+- **SysTick 中断**：配置为1ms中断，确保 `SysTick_Handler()` 正确调用 `mcu_tick_irq()`
+- **高分辨率定时器**：选择合适的定时器，配置为100ns分辨率，实现 `mcu_get_100nsRes()` 函数
+- **看门狗**：适配目标平台的独立看门狗，实现 `mcu_reload_wdg()` 函数
+- **中断处理**：更新中断向量表和中断处理函数
+
+#### 2. 驱动层处理
+- **msp/asp 驱动**：与硬件耦合度高，可根据需要选择性移植或重写
+- **建议**：保留接口定义，根据目标平台重新实现
+
+#### 3. RTT 日志限制
+- **支持设备**：仅支持J-Link支持的设备，如ARM Cortex-M0、M3、M4、M7等
+- **不支持设备**：非ARM架构或J-Link不支持的设备
+- **替代方案**：使用串口或其他调试接口
+
+### 移植步骤
+
+1. **准备工作**：安装目标平台的开发环境和支持包
+2. **核心适配**：修改 `mcu_interface` 文件夹下的文件，适配系统时钟、SysTick、高分辨率定时器和看门狗
+3. **验证测试**：编译项目，测试核心功能和RTT日志（如果支持）
+4. **驱动层处理**：根据需要选择性移植或重写驱动层
+
 ## 系统控制台
 
 Sloop提供内置的系统控制台，可以在RTT终端执行预设命令，方便调试和系统监控。
@@ -228,6 +254,7 @@ Sloop提供内置的系统控制台，可以在RTT终端执行预设命令，方便调试和系统监控。
 - **V1.3.0**：扩展服务层组件，提供更多应用服务
 - **V1.4.0**：新增Flow工作流机制，提供类似协程的编程体验
 - **V1.4.1**：完善Flow范式文档，添加打印API介绍
+- **V1.4.2**：新增移植指南，简化跨平台移植流程
 
 ## 贡献指南
 
@@ -435,6 +462,32 @@ void flow_example(void)
 - `void sl_wait_break(void);` - Interrupt wait
 - `void sl_wait_continue(void);` - Ignore wait and continue execution
 
+## Porting Guide
+
+### Core Porting Points
+
+#### 1. mcu_interface Folder Adaptation
+- **SysTick Interrupt**: Configure as 1ms interrupt, ensure `SysTick_Handler()` correctly calls `mcu_tick_irq()`
+- **High-resolution Timer**: Select appropriate timer, configure for 100ns resolution, implement `mcu_get_100nsRes()` function
+- **Watchdog**: Adapt to target platform's independent watchdog, implement `mcu_reload_wdg()` function
+- **Interrupt Handling**: Update interrupt vector table and interrupt handling functions
+
+#### 2. Driver Layer Handling
+- **msp/asp Drivers**: High hardware coupling, can be selectively ported or rewritten as needed
+- **Suggestion**: Keep interface definitions and reimplement according to target platform
+
+#### 3. RTT Log Limitations
+- **Supported Devices**: Only supports J-Link supported devices, such as ARM Cortex-M0, M3, M4, M7, etc.
+- **Unsupported Devices**: Non-ARM architecture or J-Link unsupported devices
+- **Alternative**: Use serial port or other debugging interfaces
+
+### Porting Steps
+
+1. **Preparation**: Install development environment and support packages for target platform
+2. **Core Adaptation**: Modify files in `mcu_interface` folder to adapt system clock, SysTick, high-resolution timer and watchdog
+3. **Verification Test**: Compile project, test core functions and RTT logs (if supported)
+4. **Driver Layer Handling**: Selectively port or rewrite driver layer as needed
+
 ## System Console
 
 Sloop provides a built-in system console that allows you to execute preset commands in the RTT terminal for easy debugging and system monitoring.
@@ -456,6 +509,7 @@ Sloop provides a built-in system console that allows you to execute preset comma
 - **V1.3.0**: Expanded service layer components, providing more application services
 - **V1.4.0**: Added Flow workflow mechanism, providing coroutine-like programming experience
 - **V1.4.1**: Improved Flow paradigm documentation, added print API introduction
+- **V1.4.2**: Added porting guide, simplifying cross-platform porting process
 
 ## Contribution Guide
 
