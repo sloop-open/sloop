@@ -859,6 +859,11 @@
               <FileType>1</FileType>
               <FilePath>..\user\app\config\gpio_config.c</FilePath>
             </File>
+            <File>
+              <FileName>task_flow.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\user\app\tasks\task_flow.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
