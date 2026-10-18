@@ -1,529 +1,250 @@
-# Sloop 嵌入式系统框架
+# sloopLite_cmake
 
-## 项目概述
+一个基于 STM32G030 的轻量级任务调度系统，使用 CMake 构建。
 
-Sloop是一个基于STM32系列微控制器的轻量级嵌入式系统框架，提供完整的硬件驱动、协作式任务调度内核和应用服务层，旨在简化嵌入式系统开发流程，提高代码复用性和可维护性。
+## 项目简介
 
-### 主要特性
+sloopLite 是一个专为嵌入式系统设计的轻量级任务调度框架，提供以下核心功能：
 
-- **轻量级协作式内核**：基于协作式的任务管理系统
-- **完整硬件驱动**：支持UART、CAN、GPIO等外设的高效驱动
-- **分层架构设计**：清晰的内核-驱动-服务-应用分层结构
-- **丰富的服务组件**：提供通信、存储、外设控制等应用服务
-- **强大的调试支持**：集成RTT调试和系统监控功能
-- **易于扩展**：模块化设计支持功能定制和扩展
-- **Flow工作流机制**：基于sloop框架的协作式工作流编程机制，实现类似协程的断点续执行能力
+- **超时任务** - 延迟指定时间后执行一次
+- **周期任务** - 以固定周期重复执行
+- **多次任务** - 执行指定次数后停止
+- **并发任务** - 多个任务并发运行
+- **单次任务** - 用于中断中复杂逻辑下放执行
+- **宏协程** - 非阻塞等待的协程编程模式
+- **CPU 负载监控** - 实时监控系统负载
+- **RTT 调试**：集成 SEGGER RTT 实时输出
 
-### 应用场景
+## 硬件
 
-- 工业自动化控制设备
-- 智能仪表和传感器节点
-- 嵌入式网关和数据采集系统
-- IoT终端设备
-- 消费电子和智能硬件
+- MCU: STM32G030F6P6 (ARM Cortex-M0+)
+- 调试器: J-Link
 
-## 系统架构
-
-Sloop采用分层架构设计，各层职责明确，耦合度低，便于开发和维护。
-
-### 架构层次
+## 目录结构
 
 ```
-┌─────────────────────────────────────────────────┐
-│                    应用层                        │
-│  ┌───────────┐  ┌───────────┐  ┌─────────────┐  │
-│  │   任务1   │  │   任务2   │  │    ...       │  │
-│  └───────────┘  └───────────┘  └─────────────┘  │
-├─────────────────────────────────────────────────┤
-│                    服务层                        │
-│  ┌───────────┐  ┌───────────┐  ┌─────────────┐  │
-│  │  通信服务 │  │  参数管理 │  │    ...       │  │
-│  └───────────┘  └───────────┘  └─────────────┘  │
-├─────────────────────────────────────────────────┤
-│                    驱动层                        │
-│  ┌───────────┐  ┌───────────┐  ┌─────────────┐  │
-│  │   UART    │  │   CAN     │  │    ...      │  │
-│  └───────────┘  └───────────┘  └─────────────┘  │
-├─────────────────────────────────────────────────┤
-│                    内核层                        │
-│  ┌───────────┐  ┌───────────┐  ┌─────────────┐  │
-│  │ 任务管理  │  │ 时间管理  │  │    ...       │  │
-│  └───────────┘  └───────────┘  └─────────────┘  │
-└─────────────────────────────────────────────────┘
+sloopLite_cmake/
+├── project/                    # 主项目目录
+│   ├── Core/                   # STM32 HAL 核心文件
+│   │   ├── Inc/               # 头文件
+│   │   └── Src/               # 源文件
+│   ├── Drivers/                # 驱动库
+│   │   ├── CMSIS/             # CMSIS 核心库
+│   │   └── STM32G0xx_HAL_Driver/  # STM32 HAL 驱动
+│   ├── cmake/                  # CMake 配置
+│   │   ├── stm32cubemx/       # STM32CubeMX CMake 模块
+│   │   ├── gcc-arm-none-eabi.cmake  # GCC 工具链配置
+│   │   └── starm-clang.cmake  # Clang 工具链配置
+│   ├── user/                   # 用户代码
+│   │   ├── app/               # 应用层代码
+│   │   │   ├── config/        # 配置文件
+│   │   │   ├── _main.c        # 用户主程序入口
+│   │   │   └── common.h       # 公共头文件
+│   │   └── sloop/             # sloop 调度系统
+│   │       ├── RTT/           # SEGGER RTT 调试
+│   │       ├── kernel/        # 调度核心
+│   │       ├── sloop.h        # sloop API 头文件
+│   │       └── sl_common.h    # sloop 公共定义
+│   ├── CMakeLists.txt         # 主 CMake 配置
+│   ├── CMakePresets.json      # CMake 预设配置
+│   └── STM32G030XX_FLASH.ld   # 链接脚本
+├── images/                    # 项目图片
+├── LICENSE                    # 许可证文件
+└── README.md                  # 项目说明
 ```
 
-## 核心功能
+## API 速查
 
-### Sloop 内核
+### 系统控制
 
-Sloop内核是系统的核心，提供以下功能：
+| 函数 | 说明 |
+|------|------|
+| `sloop_init()` | 初始化系统 |
+| `sloop_run()` | 运行调度循环 |
+| `sl_tick_irq()` | Tick 中断处理 |
+| `sl_get_tick()` | 获取时间戳 |
+| `sl_delay(ms)` | 阻塞延时 |
 
-#### 任务管理
-- **并行任务**：同时运行的多个任务
-- **互斥任务**：按需跳转的任务
-- **单次任务**：只执行一次的任务
-- **任务切换**：非抢占式任务切换机制
+### 任务调度
 
-#### 时间管理
-- **超时任务**：延迟指定时间后执行
-- **周期任务**：按固定周期重复执行
-- **多次任务**：执行指定次数的周期任务
+| 函数 | 说明 |
+|------|------|
+| `sl_timeout_start(ms, task)` | 超时任务 |
+| `sl_cycle_start(ms, task)` | 周期任务 |
+| `sl_multiple_start(n, ms, task)` | 多次任务 |
+| `sl_task_start(task)` | 并发任务 |
+| `sl_task_once(task)` | 单次任务 |
 
-#### 系统监控
-- CPU负载计算和监控
-- 任务运行时间统计
-- 系统心跳和状态监控
+### 宏协程
 
-### Flow 工作流机制
-
-Flow是基于sloop框架的协作式工作流编程机制，通过宏定义构建可挂起的执行体，实现类似协程的断点续执行能力。它采用线性代码结构，使复杂业务逻辑更加清晰易读。
-
-**主要特性**：
-- 线性代码结构，逻辑清晰
-- 断点续执行能力，类似协程
-- 低资源消耗，适合嵌入式系统
-- 易于集成到现有sloop项目中
-
-### Flow 范式
-
-Flow工作流采用标准范式编写，包含上下文定义、初始化、释放和运行逻辑等部分：
-
-```c
-void flow2(void)
-{
-    /* 工作流上下文，工作流需要的数据在此静态定义 */
-    _FLOW_CONTEXT(flow2);
-
-    /* 初次进入工作流，执行一次，初始化工作流上下文 */
-    _FLOW_INIT;
-
-    /* 工作流结束，不再执行时，释放资源 */
-    _FLOW_FREE(flow2);
-
-    /* 下方开始进入工作流运行逻辑 */
-    _FLOW_RUN;
-
-    FLOW_UNTIL(var > 3);
-
-    FLOW_WAIT_EVENT(evt1);
-
-    FLOW_WAIT(2000);
-
-    _FLOW_END;
-}
-```
-
-**Flow 宏说明**：
-- `_FLOW_CONTEXT(name)`：定义工作流上下文，用于存储工作流状态
-- `_FLOW_INIT`：工作流初始化代码，仅执行一次
-- `_FLOW_FREE(name)`：工作流释放代码，在工作流结束时执行
-- `_FLOW_RUN`：标记工作流运行逻辑开始
-- `FLOW_UNTIL(condition)`：循环执行直到条件满足
-- `FLOW_WAIT_EVENT(event)`：等待事件触发
-- `FLOW_WAIT(ms)`：等待指定时间（毫秒）
-- `_FLOW_END`：标记工作流结束
+| 宏 | 说明 |
+|----|------|
+| `SL_BEGIN` / `SL_END` | 协程代码块 |
+| `sl_wait_ms(ms)` | 时间等待 |
+| `sl_wait_until(cond)` | 条件等待 |
 
 ## 快速开始
 
-### 开发环境
-
-- **硬件平台**：STM32系列微控制器
-- **开发工具**：Keil MDK-ARM
-- **编译工具链**：ARMCC或GCC
-- **调试工具**：J-Link
-
-### 项目结构
-
-```
-project/
-├── Libraries/           # 第三方库
-│   ├── CMSIS/           # Cortex-M内核支持
-│   └── STM32F2xx_StdPeriph_Driver/ # STM32标准库
-├── MDK-ARM/             # 编译配置
-└── user/                # 用户代码
-    ├── app/             # 应用层
-    │   ├── config/      # 配置文件
-    │   ├── tasks/       # 任务实现
-    │   ├── main.c       # 程序入口
-    │   └── main.h       # 应用头文件
-    ├── service/         # 服务层
-    │   ├── app_service_pack/ # 应用服务包
-    │   └── mcu_service_pack/ # MCU服务包
-    └── sloop/           # Sloop内核
-        ├── RTT/         # 调试工具
-        └── kernel/      # 内核核心
+```bash
+# 构建
+mkdir build && cd build
+cmake .. -DCMAKE_TOOLCHAIN_FILE=../project/cmake/gcc-arm-none-eabi.cmake
+make -j4
 ```
 
-### 编译与烧录
+## 配置
 
-1. 打开`project/MDK-ARM/project.uvprojx`工程文件
-2. 选择目标设备
-3. 配置编译选项和链接脚本
-4. 编译工程生成固件文件
-5. 使用J-Link或ST-Link烧录固件到目标设备
-
-## 开发指南
-
-### 任务开发流程
-
-Sloop采用**动态注册机制**，任务不需要提前注册，直接调用API开始或停止任务。
-
-1. **定义任务**：在头文件中声明任务函数
-2. **实现任务**：在源文件中实现任务逻辑
-3. **运行任务**：通过内核API直接调度执行任务
-
-
-## API参考
-
-### 内核API
-
-#### 初始化函数
-- `void sloop_init(void);` - 初始化Sloop内核
-- `void sloop(void);` - 运行Sloop主循环
-
-#### 任务管理
-- `void sl_task_start(pfunc task);` - 启动并行任务
-- `void sl_task_stop(pfunc task);` - 停止并行任务
-- `void sl_task_once(pfunc task);` - 执行单次任务
-- `void sl_goto(pfunc task);` - 跳转到互斥任务
-
-#### 时间管理
-- `void sl_timeout_start(int ms, pfunc task);` - 启动超时任务
-- `void sl_timeout_stop(pfunc task);` - 停止超时任务
-- `void sl_cycle_start(int ms, pfunc task);` - 启动周期任务
-- `void sl_cycle_stop(pfunc task);` - 停止周期任务
-- `void sl_multiple_start(int num, int ms, pfunc task);` - 启动多次任务
-- `void sl_multiple_stop(pfunc task);` - 停止多次任务
-
-#### 非阻塞等待
-- `char sl_wait(int ms);` - 非阻塞等待指定时间
-- `char sl_wait_bare(void);` - 非阻塞裸等待
-- `char sl_is_waiting(void);` - 查询等待状态
-- `void sl_wait_break(void);` - 中断等待
-- `void sl_wait_continue(void);` - 忽略等待并继续执行
-
-#### 打印API
-- `void sl_printf(const char* fmt, ...);` - 格式化打印，类似printf
-- `void sl_prt_var(var);` - 打印变量名和值
-- `void sl_prt_withFunc(const char* info);` - 打印函数名和信息
-
-## 移植指南
-
-### 核心移植点
-
-#### 1. mcu_interface 文件夹适配
-- **SysTick 中断**：配置为1ms中断，确保 `SysTick_Handler()` 正确调用 `mcu_tick_irq()`
-- **高分辨率定时器**：选择合适的定时器，配置为100ns分辨率，实现 `mcu_get_100nsRes()` 函数
-- **看门狗**：适配目标平台的独立看门狗，实现 `mcu_reload_wdg()` 函数
-- **中断处理**：更新中断向量表和中断处理函数
-
-#### 2. 驱动层处理
-- **msp/asp 驱动**：与硬件耦合度高，可根据需要选择性移植或重写
-- **建议**：保留接口定义，根据目标平台重新实现
-
-#### 3. RTT 日志限制
-- **支持设备**：仅支持J-Link支持的设备，如ARM Cortex-M0、M3、M4、M7等
-- **不支持设备**：非ARM架构或J-Link不支持的设备
-- **替代方案**：使用串口或其他调试接口
-
-### 移植步骤
-
-1. **准备工作**：安装目标平台的开发环境和支持包
-2. **核心适配**：修改 `mcu_interface` 文件夹下的文件，适配系统时钟、SysTick、高分辨率定时器和看门狗
-3. **验证测试**：编译项目，测试核心功能和RTT日志（如果支持）
-4. **驱动层处理**：根据需要选择性移植或重写驱动层
-
-## 系统控制台
-
-Sloop提供内置的系统控制台，可以在RTT终端执行预设命令，方便调试和系统监控。
-
-### 内置命令
-- `reboot` - 重启系统
-- `version` - 查询版本
-- `task` - 查询当前任务数据
-- `cpu` - 查询CPU负载
-- `uart` - 串口发送
-- `can` - CAN发送
-- `gpio` - GPIO控制
-
-## 版本历史
-
-- **V1.0.0** (2024-12-20)：初始版本，支持基本内核功能和硬件驱动
-- **V1.1.0**：增加CAN总线支持和参数管理功能
-- **V1.2.0**：优化内核性能，增加系统监控功能
-- **V1.3.0**：扩展服务层组件，提供更多应用服务
-- **V1.4.0**：新增Flow工作流机制，提供类似协程的编程体验
-- **V1.4.1**：完善Flow范式文档，添加打印API介绍
-- **V1.4.2**：新增移植指南，简化跨平台移植流程
-
-## 贡献指南
-
-欢迎对Sloop项目进行贡献！
-
-1. Fork项目仓库
-2. 创建特性分支
-3. 提交代码变更
-4. 创建Pull Request
-
-## 许可证
-
-Sloop项目采用MIT许可证，详见LICENSE文件。
-
----
-
-*最后更新：2026-04-08*
-
-
-# Sloop Embedded System Framework
-
-## Project Overview
-
-Sloop is a lightweight embedded system framework based on STM32 series microcontrollers, providing complete hardware drivers, cooperative task scheduling kernel and application service layer, aiming to simplify the embedded system development process and improve code reusability and maintainability.
-
-### Key Features
-
-- **Lightweight Cooperative Kernel**: Cooperative-based task management system
-- **Complete Hardware Drivers**: Efficient drivers for UART, CAN, GPIO and other peripherals
-- **Layered Architecture Design**: Clear kernel-driver-service-application layered structure
-- **Rich Service Components**: Communication, storage, peripheral control and other application services
-- **Powerful Debugging Support**: Integrated RTT debugging and system monitoring functions
-- **Easy to Extend**: Modular design supports function customization and extension
-- **Flow Workflow Mechanism**: Cooperative workflow programming mechanism based on sloop framework, providing coroutine-like breakpoint continuation capabilities
-
-### Application Scenarios
-
-- Industrial automation control equipment
-- Intelligent instruments and sensor nodes
-- Embedded gateways and data acquisition systems
-- IoT terminal devices
-- Consumer electronics and smart hardware
-
-## System Architecture
-
-Sloop adopts a layered architecture design with clear responsibilities for each layer, low coupling, and easy development and maintenance.
-
-### Architecture Layers
-
-```
-┌─────────────────────────────────────────────────┐
-│                    Application Layer            │
-│  ┌───────────┐  ┌───────────┐  ┌─────────────┐  │
-│  │  Task 1   │  │  Task 2   │  │    ...       │  │
-│  └───────────┘  └───────────┘  └─────────────┘  │
-├─────────────────────────────────────────────────┤
-│                    Service Layer                │
-│  ┌───────────┐  ┌───────────┐  ┌─────────────┐  │
-│  │Comm Service│  │Param Mngt │  │    ...       │  │
-│  └───────────┘  └───────────┘  └─────────────┘  │
-├─────────────────────────────────────────────────┤
-│                    Driver Layer                 │
-│  ┌───────────┐  ┌───────────┐  ┌─────────────┐  │
-│  │   UART    │  │   CAN     │  │    ...      │  │
-│  └───────────┘  └───────────┘  └─────────────┘  │
-├─────────────────────────────────────────────────┤
-│                    Kernel Layer                 │
-│  ┌───────────┐  ┌───────────┐  ┌─────────────┐  │
-│  │Task Mngt  │  │Time Mngt  │  │    ...       │  │
-│  └───────────┘  └───────────┘  └─────────────┘  │
-└─────────────────────────────────────────────────┘
-```
-
-## Core Features
-
-### Sloop Kernel
-
-The Sloop kernel is the core of the system, providing the following functions:
-
-#### Task Management
-- **Parallel Tasks**: Multiple tasks running simultaneously
-- **Mutex Tasks**: Tasks that jump on demand
-- **Once Tasks**: Tasks executed only once
-- **Task Switching**: Non-preemptive task switching mechanism
-
-#### Time Management
-- **Timeout Tasks**: Execute after a specified delay
-- **Cycle Tasks**: Execute repeatedly at fixed intervals
-- **Multiple Tasks**: Execute cycle tasks a specified number of times
-
-#### System Monitoring
-- CPU load calculation and monitoring
-- Task running time statistics
-- System heartbeat and status monitoring
-
-### Flow Workflow Mechanism
-
-Flow is a cooperative workflow programming mechanism based on the sloop framework. It builds suspendable execution units through macro definitions, achieving coroutine-like breakpoint continuation capabilities. It adopts a linear code structure, making complex business logic clearer and easier to read.
-
-**Key Features**:
-- Linear code structure with clear logic
-- Breakpoint continuation capability, similar to coroutines
-- Low resource consumption, suitable for embedded systems
-- Easy to integrate into existing sloop projects
-
-## Quick Start
-
-### Development Environment
-
-- **Hardware Platform**: STM32 series microcontrollers
-- **Development Tools**: Keil MDK-ARM
-- **Compilation Toolchain**: ARMCC or GCC
-- **Debugging Tools**: J-Link or ST-Link
-
-### Project Structure
-
-```
-project/
-├── Libraries/           # Third-party libraries
-│   ├── CMSIS/           # Cortex-M kernel support
-│   └── STM32F2xx_StdPeriph_Driver/ # STM32 standard library
-├── MDK-ARM/             # Compilation configuration
-└── user/                # User code
-    ├── app/             # Application layer
-    │   ├── config/      # Configuration files
-    │   ├── tasks/       # Task implementations
-    │   ├── main.c       # Program entry
-    │   └── main.h       # Application header
-    ├── service/         # Service layer
-    │   ├── app_service_pack/ # Application service pack
-    │   └── mcu_service_pack/ # MCU service pack
-    └── sloop/           # Sloop kernel
-        ├── RTT/         # Debugging tool
-        └── kernel/      # Kernel core
-```
-
-### Compilation and Burning
-
-1. Open the project file `project/MDK-ARM/project.uvprojx`
-2. Select the target device
-3. Configure compilation options and link scripts
-4. Compile the project to generate firmware files
-5. Use J-Link or ST-Link to burn the firmware to the target device
-
-## Development Guide
-
-### Task Development Process
-
-Sloop adopts a **dynamic registration mechanism** where tasks do not need to be registered in advance; you can directly call APIs to start or stop tasks.
-
-1. **Define Task**: Declare the task function in the header file
-2. **Implement Task**: Implement the task logic in the source file
-3. **Run Task**: Directly schedule and execute the task through kernel APIs
-
-### Flow Workflow Usage
-
-The Flow workflow mechanism builds suspendable execution units through macro definitions, providing coroutine-like breakpoint continuation capabilities.
+`project/user/app/config/sl_config.h`:
 
 ```c
-// Flow workflow example
-void flow_example(void)
-{
-    FLOW_BEGIN();
-    
-    // Execute step 1
-    sl_printf("Step 1\n");
-    sl_wait(100);
-    
-    FLOW_YIELD(); // Suspend and continue execution next time
-    
-    // Execute step 2
-    sl_printf("Step 2\n");
-    sl_wait(100);
-    
-    FLOW_END();
+#define SL_TIMEOUT_LIMIT     16   // 超时任务上限
+#define SL_CYCLE_LIMIT       16   // 周期任务上限
+#define SL_MULTIPLE_LIMIT    16   // 多次任务上限
+#define SL_CONCURRENT_LIMIT  32   // 并发任务上限
+#define SL_ONCE_LIMIT        16   // 单次任务上限
+#define SL_RTT_ENABLE        1    // 启用 RTT
+```
+
+## 示例
+
+### 周期任务
+
+```c
+void led_blink(void) {
+    HAL_GPIO_TogglePin(LED_GPIO_Port, LED_Pin);
+}
+
+void _main(void) {
+    sloop_init();
+    sl_cycle_start(500, led_blink);  // 每 500ms 闪烁
+    while (1) 
+    {
+        sloop_run();
+    }
 }
 ```
 
-## API Reference
+### 协程
 
-### Kernel API
+```c
+void sensor_task(void) {
+    SL_BEGIN;
+    for (;;) {
+        sl_wait_until(sensor_ready);
+        read_sensor();
+        sl_wait_ms(1000);
+    }
+    SL_END;
+}
 
-#### Initialization Functions
-- `void sloop_init(void);` - Initialize Sloop kernel
-- `void sloop(void);` - Run Sloop main loop
+void _main(void) {
+    sloop_init();
+    sl_task_start(sensor_task);  // 启动协程任务
+    while (1) 
+    {
+        sloop_run();
+    }
+}
+```
 
-#### Task Management
-- `void sl_task_start(pfunc task);` - Start parallel task
-- `void sl_task_stop(pfunc task);` - Stop parallel task
-- `void sl_task_once(pfunc task);` - Execute once task
-- `void sl_goto(pfunc task);` - Jump to mutex task
+### sloop_init 核心示例
 
-#### Time Management
-- `void sl_timeout_start(int ms, pfunc task);` - Start timeout task
-- `void sl_timeout_stop(pfunc task);` - Stop timeout task
-- `void sl_cycle_start(int ms, pfunc task);` - Start cycle task
-- `void sl_cycle_stop(pfunc task);` - Stop cycle task
-- `void sl_multiple_start(int num, int ms, pfunc task);` - Start multiple task
-- `void sl_multiple_stop(pfunc task);` - Stop multiple task
+**心跳任务（周期任务 API）**：
 
-#### Non-blocking Waiting
-- `char sl_wait(int ms);` - Non-blocking wait for specified time
-- `char sl_wait_bare(void);` - Non-blocking bare wait
-- `char sl_is_waiting(void);` - Query wait status
-- `void sl_wait_break(void);` - Interrupt wait
-- `void sl_wait_continue(void);` - Ignore wait and continue execution
+```c
+void system_heartbeat(void) {
+    static int count;
+    SEGGER_RTT_SetTerminal(1);
+    sl_prt_var(count);
+    SEGGER_RTT_SetTerminal(0);
+    count++;
+}
 
-## Porting Guide
+// sl_cycle_start(1000, system_heartbeat);
+```
 
-### Core Porting Points
+**CPU 负载监控（协程 API）**：
 
-#### 1. mcu_interface Folder Adaptation
-- **SysTick Interrupt**: Configure as 1ms interrupt, ensure `SysTick_Handler()` correctly calls `mcu_tick_irq()`
-- **High-resolution Timer**: Select appropriate timer, configure for 100ns resolution, implement `mcu_get_100nsRes()` function
-- **Watchdog**: Adapt to target platform's independent watchdog, implement `mcu_reload_wdg()` function
-- **Interrupt Handling**: Update interrupt vector table and interrupt handling functions
+```c
 
-#### 2. Driver Layer Handling
-- **msp/asp Drivers**: High hardware coupling, can be selectively ported or rewritten as needed
-- **Suggestion**: Keep interface definitions and reimplement according to target platform
+/* 计算 cpu 负载 */
+void calcul_cpu_load(void)
+{
+    loop++;
 
-#### 3. RTT Log Limitations
-- **Supported Devices**: Only supports J-Link supported devices, such as ARM Cortex-M0, M3, M4, M7, etc.
-- **Unsupported Devices**: Non-ARM architecture or J-Link unsupported devices
-- **Alternative**: Use serial port or other debugging interfaces
+    load_calcu();
 
-### Porting Steps
+    judge_warning();
+}
 
-1. **Preparation**: Install development environment and support packages for target platform
-2. **Core Adaptation**: Modify files in `mcu_interface` folder to adapt system clock, SysTick, high-resolution timer and watchdog
-3. **Verification Test**: Compile project, test core functions and RTT logs (if supported)
-4. **Driver Layer Handling**: Selectively port or rewrite driver layer as needed
+/* CPU 负载基数，即 CPU = 100% 时，一个 loop 的时间 单位0.1us，约定当loop 达到100us时，CPU 占用为100% */
 
-## System Console
+/* 计算周期 ms */
+#define LOOP_CYCLE (100)
+/* 负载基数 us */
+#define LOOP_BASE (100)
 
-Sloop provides a built-in system console that allows you to execute preset commands in the RTT terminal for easy debugging and system monitoring.
+void load_calcu(void)
+{
+    SL_BEGIN;
 
-### Built-in Commands
-- `reboot` - Reboot system
-- `version` - Query version
-- `task` - Query current task data
-- `cpu` - Query CPU load
-- `uart` - UART send
-- `can` - CAN send
-- `gpio` - GPIO control
+    for (;;)
+    {
+        sl_wait_ms(LOOP_CYCLE);
 
-## Version History
+        loop_us = LOOP_CYCLE * 1000 / loop;
 
-- **V1.0.0** (2024-12-20): Initial version, supporting basic kernel functions and hardware drivers
-- **V1.1.0**: Added CAN bus support and parameter management functions
-- **V1.2.0**: Optimized kernel performance, added system monitoring functions
-- **V1.3.0**: Expanded service layer components, providing more application services
-- **V1.4.0**: Added Flow workflow mechanism, providing coroutine-like programming experience
-- **V1.4.1**: Improved Flow paradigm documentation, added print API introduction
-- **V1.4.2**: Added porting guide, simplifying cross-platform porting process
+        load = loop_us * 100 / LOOP_BASE;
 
-## Contribution Guide
+        loop = 0;
+    }
 
-Welcome to contribute to the Sloop project!
+    SL_END;
+}
 
-1. Fork the project repository
-2. Create a feature branch
-3. Commit code changes
-4. Create a Pull Request
+/* 负载警告 */
+void load_warning(void)
+{
+    SL_BEGIN;
 
-## License
+    for (;;)
+    {
+        sl_error("cpu load over 80%%, reach %2d, average loop time: %d us", load, loop_us);
 
-The Sloop project is licensed under the MIT License, see the LICENSE file for details.
+        sl_wait_ms(1000);
+    }
 
----
+    SL_END;
+}
 
-*Last updated: 2026-04-08*
+void judge_warning(void)
+{
+    SL_BEGIN;
+
+    for (;;)
+    {
+        sl_wait_until(load > 800);
+
+        sl_task_start(load_warning);
+
+        sl_wait_until(load < 600);
+
+        sl_task_stop(load_warning);
+    }
+
+    SL_END;
+}
+
+
+// sl_task_start(calcul_cpu_load);
+```
+
+## RTT 调试
+
+1. 连接 J-Link
+2. 打开 SEGGER RTT Viewer
+3. 选择目标设备
+
+## 许可证
+
+MIT License

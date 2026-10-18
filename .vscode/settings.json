@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.c": "c",
+        "main.h": "c"
+    },
+    "cmake.sourceDirectory": "D:/git/sloopLite_cmake/project"
+}

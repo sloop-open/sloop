@@ -14,8 +14,6 @@
 
 #include "sloop.h"
 #include "main.h"
-#include "service_api.h"
-#include "gpio_config.h"
 
 /* ==用户代码区 结束== */
 
