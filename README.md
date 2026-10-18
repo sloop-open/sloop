@@ -1,4 +1,4 @@
-# sloop_cmake
+# sloop
 
 > 复杂的逻辑写了一大堆 flag，越写越乱。试一下用 sloop 来管理裸机程序，轻量又实用。
 
